@@ -19,7 +19,6 @@ User API : this API is responsible by management users. With it us going to crea
 <img src="user-diagram.png">
 
 <br/>
-<br/>
 
 ## Runing API
 
