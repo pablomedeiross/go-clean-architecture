@@ -1,10 +1,10 @@
 # Clean architecture in Go
-This project is a simple sample of a implementation Clean Architecture in GoLang.
+This project is a simple sample of an implementation Clean Architecture in GoLang.
 
 <br/>
 
 ## Use case 
-User API : this API is responsible by management users. With it us going to create and search users.
+User API : This API is responsible by management users. With it us going to create and search users.
 
 <br/>
 
@@ -20,7 +20,7 @@ User API : this API is responsible by management users. With it us going to crea
 
 <br/>
 
-## Runing API
+## Running API
 
 ```bash
 
