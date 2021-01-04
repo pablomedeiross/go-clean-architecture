@@ -41,10 +41,23 @@ func TestGetName(t *testing.T) {
 	}
 }
 
-// TODO: Test
-// func TestAddAddressInUserWithoutAddress(t *testing.T) {
+func TestAddAddressInUserWithoutAddress(t *testing.T) {
 
-// 	address := address
-// 	userTest, _ := domain.NewUser(nameExpected, "email@gmail.com", 10, nil)
+	address, _ := domain.NewAddress("test", 2, "test", 12345567)
+	userTest, _ := domain.NewUser("name", "email@gmail.com", 10, nil)
 
-// }
+	userTest.AddAddress(address)
+}
+
+//TODO:
+func TestAddAddressInUserWithSameAddress(t *testing.T) {
+
+	address, _ := domain.NewAddress("test", 2, "test", 12345567)
+	user, err := domain.NewUser("name", "email@gmail.com", 10, append([]domain.Address{}, address))
+
+	user.AddAddress(address)
+
+	if err == nil {
+		t.Errorf("Error")
+	}
+}

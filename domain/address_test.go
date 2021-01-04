@@ -95,5 +95,4 @@ func TestGetZipCode(t *testing.T) {
 				"expected: " +
 				strconv.Itoa(zipCodeExpected))
 	}
-
 }
