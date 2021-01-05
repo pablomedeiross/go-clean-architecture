@@ -64,7 +64,7 @@ func TestGetAge(t *testing.T) {
 func TestGetAdresses(t *testing.T) {
 
 	address, _ := domain.NewAddress("test", 2, "test", 12345567)
-	addressesExpected := append([]domain.Address{}, address)
+	addressesExpected := append([]domain.Address{}, *address)
 
 	userTest, _ := domain.NewUser("name", "email@gmail.com", 12, addressesExpected)
 
@@ -78,7 +78,7 @@ func TestAddAddressInUserWithoutAddress(t *testing.T) {
 	address, _ := domain.NewAddress("test", 2, "test", 12345567)
 	userTest, _ := domain.NewUser("name", "email@gmail.com", 10, nil)
 
-	err := userTest.AddAddress(address)
+	err := userTest.AddAddress(*address)
 
 	if err != nil {
 		t.Errorf("Error error returning when addAddress in user: " + err.Error())
@@ -89,9 +89,9 @@ func TestAddAddressInUserWithoutAddress(t *testing.T) {
 func TestAddAddressInUserWithSameAddress(t *testing.T) {
 
 	address, _ := domain.NewAddress("test", 2, "test", 12345567)
-	user, _ := domain.NewUser("name", "email@gmail.com", 10, append([]domain.Address{}, address))
+	user, _ := domain.NewUser("name", "email@gmail.com", 10, append([]domain.Address{}, *address))
 
-	err := user.AddAddress(address)
+	err := user.AddAddress(*address)
 
 	if err == nil {
 		t.Errorf("Error AddAddress add same address in User")

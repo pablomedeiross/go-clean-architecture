@@ -14,9 +14,9 @@ type Address struct {
 }
 
 // NewAddress is a factory for Address
-func NewAddress(street string, number int, neighborhood string, zipCode int) (Address, error) {
+func NewAddress(street string, number int, neighborhood string, zipCode int) (*Address, error) {
 
-	var addr Address
+	var addr *Address
 	var err error
 
 	if len(street) <= 0 || number <= 0 || len(neighborhood) <= 0 || zipCode <= 0 {
@@ -29,7 +29,7 @@ func NewAddress(street string, number int, neighborhood string, zipCode int) (Ad
 				strconv.Itoa(zipCode))
 
 	} else {
-		addr = Address{
+		addr = &Address{
 			street:       street,
 			number:       number,
 			neighborhood: neighborhood,
@@ -55,7 +55,7 @@ func (ad Address) Neighborhood() string {
 	return ad.neighborhood
 }
 
-// ZipCode return Address ZipCode
+// ZipCode return Address ZipCodeilk
 func (ad Address) ZipCode() int {
 	return ad.zipCode
 }

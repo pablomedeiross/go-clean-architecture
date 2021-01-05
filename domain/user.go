@@ -14,16 +14,16 @@ type User struct {
 }
 
 // NewUser is a factory of User
-func NewUser(name string, email string, age int, addresses []Address) (User, error) {
+func NewUser(name string, email string, age int, addresses []Address) (*User, error) {
 
-	var us User
+	var us *User
 	var err error
 
 	if len(name) <= 0 || len(email) <= 0 || age <= 0 {
 		err = errors.New("Error creating new User with arguments : " + name + ", " + email + ", " + strconv.Itoa(age))
 
 	} else {
-		us = User{
+		us = &User{
 			name:      name,
 			email:     email,
 			age:       age,
