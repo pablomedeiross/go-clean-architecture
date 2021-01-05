@@ -28,7 +28,7 @@ func TestNewAddressValidations(t *testing.T) {
 		addressActual, errorActual := domain.NewAddress(streets[i], numbers[i], neighborhoods[i], zipCodes[i])
 
 		if addressActual != nil {
-			t.Errorf("Invalid address instatiation: " + addressActual.GetStreet())
+			t.Errorf("Invalid address instatiation: " + addressActual.Street())
 		}
 
 		if errorActual == nil || !reflect.DeepEqual(errorActual, errorExpected) {
@@ -43,10 +43,10 @@ func TestGetStreet(t *testing.T) {
 
 	addressActual, _ := domain.NewAddress(streetExpected, 1112, "neighborhood", 123452341)
 
-	if addressActual.GetStreet() != streetExpected {
+	if addressActual.Street() != streetExpected {
 		t.Errorf(
 			"Invalid street in GetStreet() test. Actual : " +
-				addressActual.GetStreet() +
+				addressActual.Street() +
 				"expected: " +
 				streetExpected)
 	}
@@ -58,10 +58,10 @@ func TestGetNumber(t *testing.T) {
 
 	addressActual, _ := domain.NewAddress("test", numberExpected, "neighborhood", 123452341)
 
-	if addressActual.GetNumber() != numberExpected {
+	if addressActual.Number() != numberExpected {
 		t.Errorf(
 			"Invalid number in GetNumber() test. Actual : " +
-				strconv.Itoa(addressActual.GetNumber()) +
+				strconv.Itoa(addressActual.Number()) +
 				"expected: " +
 				strconv.Itoa(numberExpected))
 	}
@@ -73,10 +73,10 @@ func TestGetNeighborhood(t *testing.T) {
 
 	addressActual, _ := domain.NewAddress("test", 1112, neighborhoodExpected, 123452341)
 
-	if addressActual.GetNeighborhood() != neighborhoodExpected {
+	if addressActual.Neighborhood() != neighborhoodExpected {
 		t.Errorf(
 			"Invalid neighborhood in GetNeighborhood() test. Actual : " +
-				addressActual.GetNeighborhood() +
+				addressActual.Neighborhood() +
 				"expected: " +
 				neighborhoodExpected)
 	}
@@ -88,10 +88,10 @@ func TestGetZipCode(t *testing.T) {
 
 	addressActual, _ := domain.NewAddress("test", 124, "neighborhood", zipCodeExpected)
 
-	if addressActual.GetZipCode() != zipCodeExpected {
+	if addressActual.ZipCode() != zipCodeExpected {
 		t.Errorf(
 			"Invalid number in GetZipCode() test. Actual : " +
-				strconv.Itoa(addressActual.GetZipCode()) +
+				strconv.Itoa(addressActual.ZipCode()) +
 				"expected: " +
 				strconv.Itoa(zipCodeExpected))
 	}

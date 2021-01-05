@@ -5,16 +5,8 @@ import (
 	"strconv"
 )
 
-// Address interface entity
-type Address interface {
-	GetStreet() string
-	GetNumber() int
-	GetNeighborhood() string
-	GetZipCode() int
-}
-
-// address is a implementation for Address interface entity
-type address struct {
+// Address is a entity
+type Address struct {
 	street       string
 	number       int
 	neighborhood string
@@ -37,7 +29,7 @@ func NewAddress(street string, number int, neighborhood string, zipCode int) (Ad
 				strconv.Itoa(zipCode))
 
 	} else {
-		addr = &address{
+		addr = Address{
 			street:       street,
 			number:       number,
 			neighborhood: neighborhood,
@@ -48,18 +40,22 @@ func NewAddress(street string, number int, neighborhood string, zipCode int) (Ad
 	return addr, err
 }
 
-func (ad address) GetStreet() string {
+// Street return Address Street
+func (ad Address) Street() string {
 	return ad.street
 }
 
-func (ad address) GetNumber() int {
+// Number return Address Number
+func (ad Address) Number() int {
 	return ad.number
 }
 
-func (ad address) GetNeighborhood() string {
+// Neighborhood return Address Neighborhood
+func (ad Address) Neighborhood() string {
 	return ad.neighborhood
 }
 
-func (ad address) GetZipCode() int {
+// ZipCode return Address ZipCode
+func (ad Address) ZipCode() int {
 	return ad.zipCode
 }

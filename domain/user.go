@@ -5,22 +5,16 @@ import (
 	"strconv"
 )
 
-// User Entity interface
-type User interface {
-	GetName() string
-	AddAddress(address Address) error
-}
-
-// User entity implementation
-type user struct {
-	name    string
-	email   string
-	age     int
-	address []Address
+// User is a Aggregate root entity
+type User struct {
+	name      string
+	email     string
+	age       int
+	addresses []Address
 }
 
 // NewUser is a factory of User
-func NewUser(name string, email string, age int, address []Address) (User, error) {
+func NewUser(name string, email string, age int, addresses []Address) (User, error) {
 
 	var us User
 	var err error
@@ -29,32 +23,47 @@ func NewUser(name string, email string, age int, address []Address) (User, error
 		err = errors.New("Error creating new User with arguments : " + name + ", " + email + ", " + strconv.Itoa(age))
 
 	} else {
-		us = &user{
-			name:    name,
-			email:   email,
-			age:     age,
-			address: address,
+		us = User{
+			name:      name,
+			email:     email,
+			age:       age,
+			addresses: addresses,
 		}
 	}
 
 	return us, err
 }
 
-// GetName return user name
-func (us user) GetName() string {
+// Name return User name
+func (us User) Name() string {
 	return us.name
 }
 
+// Email return User email
+func (us User) Email() string {
+	return us.email
+}
+
+// Age return User age
+func (us User) Age() int {
+	return us.age
+}
+
+// Addresses return User addresses
+func (us User) Addresses() []Address {
+	return us.addresses
+}
+
 // AddAddress include new address in User
-func (us user) AddAddress(address Address) error {
+func (us *User) AddAddress(address Address) error {
 
 	var err error
 
-	if addressExists(address, us.address) {
-		err = errors.New("Address already exists in user: " + us.GetName())
+	if exists := addressExists(address, us.addresses); exists {
+		err = errors.New("Address already exists in User: " + us.Name())
 	}
 
-	us.address = append(us.address, address)
+	us.addresses = append(us.addresses, address)
 
 	return err
 }
