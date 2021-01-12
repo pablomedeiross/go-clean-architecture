@@ -3,29 +3,38 @@ This project is a simple sample of a implementation Clean Architecture in GoLang
 
 <br/>
 
-## Use case 
-User API : this API is responsible by management users. With it us going to create and search users.
+## User API
+It is responsible by management users. With it we can:
+<ul>
+    <li>create</li>
+    <li>set passwords</li>
+    <li>search</li>
+    <li>remove</li>
+</ul>
 
 <br/>
 
-## Layers
-<li>Domain / Model</li>
-<li>Usecase / Service</li>
-<li>Controller</li>
-<li>Repository</li>
+## More about
+
+- [Architecture](architecture.md)
+<!-- - [Tests](tests.md) -->
+<!-- - [Resources](resources.md) -->
 
 <br/>
 
-<img src="user-diagram.png">
+## Technologies
 
-<br/>
+- [Golang](https://golang.org/)
+- [Docker](https://www.docker.com/)
+- [MongoDB](https://www.mongodb.com/)
+
 <br/>
 
 ## Runing API
 
 ```bash
 
-# move to directory
+# move to your workspace
 cd workspace
 
 # clone into your $GOPATH/src
