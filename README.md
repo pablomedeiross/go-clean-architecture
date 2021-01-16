@@ -8,7 +8,7 @@ The clean architecture is a model proposed by [Robert C. Martin (Uncle Bob)](htt
 Briefly, this model seeks to strengthen the following points in our software:
 
 
-- Increase expressivity of the problem that the software is solutioning.
+- Increase expressivity of problem that the software is solutioning.
 - Independence of external structures, example: Frameworks, DB, UI, WEB).
 - Testability
 
