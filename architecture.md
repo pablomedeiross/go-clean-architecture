@@ -1,7 +1,10 @@
 # Architecture
+Following the proposed  
 
 <br/>
 
-<img src="architecture.png">
+## 
+
+<img src="clean_arch.png">
 
 <br/>

@@ -1,1 +1,2 @@
 module domain
+module user
