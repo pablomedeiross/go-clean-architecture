@@ -4,11 +4,11 @@ This project is a sample of a implementation Clean Architecture in GoLang.
 <br/>
 
 ### Summary
-The clean architecture is a model proposed by Robert C. Martin (Uncle Bob). <br/>
+The clean architecture is a model proposed by Robert C. Martin (Uncle Bob).
 Briefly, this model seeks to strengthen the following points in our software:
 
 
-- <span style="color:grey"> Increase expressivity of the problem that the software is solutioning.</span>
+- Increase expressivity of the problem that the software is solutioning.
 - Independence of external structures, example: Frameworks, DB, UI, WEB).
 - Testability
 
