@@ -9,7 +9,7 @@ Briefly, this model seeks to strengthen the following points in our software:
 
 
 - Increase expressivity of problem that the software is solutioning.
-- Independence of external structures, example: Frameworks, DB, UI, WEB).
+- Independence of external structures, example: Frameworks, DB, UI, WEB.
 - Testability
 
 <br/>
