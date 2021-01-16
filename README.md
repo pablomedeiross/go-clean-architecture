@@ -1,30 +1,48 @@
-# Clean architecture in Go
-This project is a simple sample of an implementation Clean Architecture in GoLang.
+# Clean architecture in Golang
+This project is a sample of an implementation of Clean Architecture in GoLang.
 
 <br/>
 
-## Use case 
-User API : This API is responsible by management users. With it us going to create and search users.
+### Summary
+The clean architecture is a model proposed by [Robert C. Martin (Uncle Bob)](http://cleancoder.com/).
+Briefly, this model seeks to strengthen the following points in our software:
+
+- Increase expressivity of problem that the software is solutioning.
+- Independence of external structures, example: Frameworks, DB, UI, WEB.
+- Testability
 
 <br/>
 
-## Layers
-<li>Domain / Model</li>
-<li>Usecase / Service</li>
-<li>Controller</li>
-<li>Repository</li>
+### Use case
+The use case chosen for this sample is a service of user's management. It was selected for keep the simplicity. With it we'll can: 
+
+- [create new user]()
+- [search users]()
+- [remove user]()
+- [set user's password]()
 
 <br/>
 
-<img src="user-diagram.png">
+### More about
+- [Architecture](architecture.md)
+- [Tests](tests.md)
+- [Api](api.md)
 
 <br/>
 
-## Running API
+### Technologies
+
+- [Golang](https://golang.org/)
+- [Docker](https://www.docker.com/)
+- [MongoDB](https://www.mongodb.com/)
+
+<br/>
+
+### Running
 
 ```bash
 
-# move to directory
+# move to your workspace
 cd workspace
 
 # clone into your $GOPATH/src
