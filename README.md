@@ -1,5 +1,5 @@
 # Clean architecture in Golang
-This project is a sample of an implementation Clean Architecture in GoLang.
+This project is a sample of an implementation of Clean Architecture in GoLang.
 
 <br/>
 
