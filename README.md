@@ -1,5 +1,5 @@
 # Clean architecture in Golang
-This project is a sample of a implementation Clean Architecture in GoLang.
+This project is a sample of an implementation Clean Architecture in GoLang.
 
 <br/>
 
@@ -15,7 +15,7 @@ Briefly, this model seeks to strengthen the following points in our software:
 <br/>
 
 ### Use case
-The use case chosen for this sample is a service of user's management. It was selected for keep the simplicity. With it we will can: 
+The use case chosen for this sample is a service of user's management. It was selected for keep the simplicity. With it we'll can: 
 
 - [create new user]()
 - [search users]()
@@ -39,7 +39,7 @@ The use case chosen for this sample is a service of user's management. It was se
 
 <br/>
 
-### Runing
+### Running
 
 ```bash
 
