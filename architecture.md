@@ -1,22 +1,16 @@
 # Architecture
 This section seeks explain some points about clean architecture.
 
-<br/>
-
 ### Principles
 - SoC (separation of concerns)
 - Use cases with first class citizens
 - Dependency injection
 - Testability
 
-<br/>
-
 ### Rules
 - The modules more externals should depend of the more internals, but never the opposite.
 - The limits between layers should be explicit.
 - Frameworks are a detail.
-
-<br/>
 
 ### Diagram
 Bellow you should see a summary of clean architecture. 
