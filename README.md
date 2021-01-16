@@ -1,24 +1,35 @@
-# Clean architecture in Go
-This project is a simple sample of a implementation Clean Architecture in GoLang.
+# Clean architecture in Golang
+This project is a sample of a implementation Clean Architecture in GoLang.\ 
 
 <br/>
 
-## User API
-It is responsible by management users. With it we can:
-<ul>
-    <li>create</li>
-    <li>set passwords</li>
-    <li>search</li>
-    <li>remove</li>
-</ul>
+## Summary
+The clean architecture is a model proposed by Robert C. Martin (Uncle Bob). 
+Briefly, this model seeks to strengthen the following points in our software:
+
+
+- Increase expressivity of the problem that the software is solutioning.
+- Independence of external structures, example: Frameworks, DB, UI, WEB).
+- Testability
+
+<br/>
+
+## Use case
+The use case chosen for this sample is a service of user's management. It was selected for keep the simplicity.\ With it we will can: 
+
+- [create new user]()
+- [search users]()
+- [remove user]()
+- [set user's password]()
 
 <br/>
 
 ## More about
-
 - [Architecture](architecture.md)
-<!-- - [Tests](tests.md) -->
-<!-- - [Resources](resources.md) -->
+- [Tests](tests.md)
+- [Api](api.md)
+- [Technologies](#Technologies)
+- [Running](#Runing)
 
 <br/>
 
@@ -30,7 +41,7 @@ It is responsible by management users. With it we can:
 
 <br/>
 
-## Runing API
+## Runing
 
 ```bash
 
