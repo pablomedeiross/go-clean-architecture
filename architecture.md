@@ -19,9 +19,6 @@ With it in mind let's talk about the following topics:
 - [Rules](#Rules)
 - [More about](#Moreabout)
 
-<br/>
-
-
 ## Purpose 
 How objective this architecture seek solve or improve the following points:
 
@@ -39,6 +36,8 @@ The principles that guide this architecture are:
 - Use cases how first class citizens
 - Dependency injection
 - Testability
+
+<br/>
 
 ## Concepts
 There are some concepts that are important we knowing before we following analyzing in the next sections.
