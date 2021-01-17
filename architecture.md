@@ -19,6 +19,8 @@ With it in mind let's talk about the following topics:
 - [Rules](#Rules)
 - [More about](#Moreabout)
 
+<br/>
+
 ## Purpose 
 How objective this architecture seek solve or improve the following points:
 
@@ -52,8 +54,6 @@ Example: Changes in calculate of interest of enterprise.
 #### Low level
 The policies that cope with inputs and outputs from system are policies of more low level of the system. These policies tend to change more frequently for less substantial reasons because they are closer to I / O.\
 Examples: Change of database, changes in UI. 
-
-<br/>
 
 ### Enterprise business rules
 These rules must are the system's hearth. They're part of high level policies from system and should was the part more reusable of it. They concern the rules that are responsible for generate or save the money from enterprise, they exist even don't exist an automatized system.\
