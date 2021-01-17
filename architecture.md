@@ -11,6 +11,7 @@ This section seeks explain a little more about clean architecture.
 This image is a summary of concepts, relationships and responsibilities of the existenting layers.
 With it in mind let's talk about the following topics:
 
+- [Purpose](#Purpose)
 - [Principles](#Principles)
 - [Concepts](#Concepts)
 - [Layers](#Layers)
@@ -20,54 +21,63 @@ With it in mind let's talk about the following topics:
 
 <br/>
 
-### Principles
+
+## Purpose 
+How objective this architecture seek solve or improve the following points:
+
+- structure expressivity
+- maintenance 
+- testability
+- decoupling of business solve from Frameworks and drives
+
+<br/>
+
+## Principles
 The principles that guide this architecture are:
+
 - SoC (separation of concerns)
 - Use cases how first class citizens
 - Dependency injection
 - Testability
 
-### Concepts
-Existem alguns conceitos que são importantes de conhecermos antes de seguirmos analisando as próximas seções.
+## Concepts
+There are some concepts that are important we knowing before we following analyzing in the next sections.
+
+### Policies
+Software systems are statements of politics. In essence this mean what a program of computer really is. A program of computer is a description detail of a political that coordinates the transformations of input and output.
+
+#### High level
+How much more away of inputs and outputs more high is politic's level. Generally this type of politic describe flows more abstracts. It tend change with less frequency but for reasons more substantial.\
+Example: Changes in calculate of interest of enterprise.
+
+#### Low level
+The policies that cope with inputs and outputs from system are policies of more low level of the system. These policies tend to change more frequently for less substantial reasons because they are closer to I / O.\
+Examples: Change of database, changes in UI. 
 
 <br/>
 
-#### Politics
-Sistemas de software são declações de política. Em essência isso expressa o que um programa de computador realmente é. Um programa de computador é uma descrição detalhada de uma política que coordena a transformação de entradas e saídas.
+### Enterprise business rules
+These rules must are the system's hearth. They're part of high level policies from system and should was the part more reusable of it. They concern the rules that are responsible for generate or save the money from enterprise, they exist even don't exist an automatized system.\
+Example: The collection of N% of interest by a loan is a rule of business tha generate receive for the bank and exist without a automatized system.
 
-#### High level politics
-Quanto mais afastadas das entradas e saídas mais alto é o nível da política. Geralmente esse tipo de política descreve fluxos mais abstratos. Elas tendem a mudar menos frequentemente mas por razões mais substânciais. 
-
-#### Low level politics
-As politicas que lidam com entradas e saídas do sistema são as políticas de nível mais baíxo do sistema.
-As politicas de baixo nível são responsáveis por lidar com entradas e saídas do sistema.
-Esse tipo de política tende a mudar com mais frequência e por razões menos substânciais em função de estar mais próximo de I/O.
-
-
-#### Enterprise business rules
-Esse tipo de regra deve ser o coração do sistema. Elas fazem parte das políticas de nível mais alto do sistema e deveriam ser a parte mais reutilizavel dele. Elas dizem respeito a regras que são responsáveis por gerar ou economizar o dinheiro da empresa, existiram mesmo que não houvesse um sistema automatizado.
-Exemplo: a cobrança de N% de juros por um empréstimo é uma regra de negócio que gera receita para o banco e existiria sem um sistema automatizado.
-
-
-#### Application business rules
-Nem todas as regras de negócio são tão puras, algumas delas geram ou economizam dinheiro para empresa ao definirem a forma como um sistema automatizado opera. Essas regras não seriam usadas em um ambiente manual, pois só fazem sentido como parte de um sistema automatizado. São políticas de nível inferior as regras de negócio por se tratar de fatos não tão cruciais.
-Exemplo: O controle de quem deve ou não visualizar uma tela do sistema em alguma tela.
+### Application business rules
+Not all business rules are so pure, some of them generate or save money for the company by defining the way an automated system operates. These rules can't be used in a manual environment, because they only make sense as part of an automated system. These policies are low than the business rule by treat of facts not so crucial.\
+Example: The control of who could or not view a interface of system.
 
 <br/>
 
 ## Layers
 
+### Entity
+### Use case
+### Adapter of interfaces
+### Frameworks and drives
+
 <br/>
 
-## Relationship bettwen layers
-
-<br/>
-
-## Rules
-- The modules more externals should depend of the more internals, but never the opposite.
-- The limits between layers should be explicit.
-- Frameworks are a detail.
-
+## Relationship
+### Layers
+### Objects 
 <br/>
 
 ## More about
