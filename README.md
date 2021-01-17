@@ -16,10 +16,10 @@ Briefly, this model seeks to strengthen the following points in our software:
 ### Use case
 The use case chosen for this sample is a service of user's management. It was selected for keep the simplicity. With it we'll can: 
 
-- [create new user]()
-- [search users]()
-- [remove user]()
-- [set user's password]()
+- [Create new user]()
+- [Search users]()
+- [Remove user]()
+- [Set user's password]()
 
 <br/>
 
