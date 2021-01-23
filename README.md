@@ -24,7 +24,8 @@ The use case chosen for this sample is a service of user's management. It was se
 <br/>
 
 ## More about
-- [Architecture](architecture.md)
+- [Clean architecture](clean_architecture.md)
+- [My implementation of clean architecture](my_implementation.md)
 - [Tests](tests.md)
 - [Api](api.md)
 

@@ -1,2 +1,1 @@
-module core
-module io
+module github.com/pablomedeiross/go-clean-architecture

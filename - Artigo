@@ -1,0 +1,22 @@
+- Artigo
+
+- Apresentar imagem resumo da arquitetura
+- Falar sobre propósito
+- Falar sobre prinicipios
+- Falar sobre alguns conceitos fundamentais
+    - Políticas
+        - Alto nível
+        - Baixo nível
+    - Regras de negócio
+    - Regras de aplicação
+- Falar sobre camadas
+- Falar sobre relações entre camadas
+- Falar sobre referências
+
+
+
+- Falar sobre os prinicipios da arquitetura e como eles podem ser mantidos mesmo sem seguir todo o plano descrito no livro.
+
+ - Falar sobre políticas de alto e baixo nível. Exemplo: Mostrar o que são ambas e demonstrar porque precisam ser separadas.
+    Política de alto níve diz respeito as abstrações de negócio, elas são os motivos pelos quais nossa aplicação existe.
+    Política de baixo nível diz respeito aos detalhes de implementação. São detalhes de segundo plano que não são tão relevantes em primeiro momento e pode ser vistos como detalhes. (DB, WEB, UI).
