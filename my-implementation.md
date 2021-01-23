@@ -7,12 +7,12 @@ Este é um visual que busca esclarecer como a aplicação implementa a arquitetu
 
 A implementação atual da aplicação contem os seguintes módulos:
 
-<img src="impl-clean-architecture.png"/>
-
-- entity
-- use-case
-- adapter
-- infrastructure
+| Clean architecture layer | My module      |
+|--------------------------|----------------|
+| Entity                   | entity         |
+| Use case                 | use-case       |
+| Adapters of Interfaces   | adapter        |
+| External interfaces      | infrastructure |
 
 <br/>
 
