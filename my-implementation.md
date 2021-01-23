@@ -3,9 +3,8 @@ Este é um visual que busca esclarecer como a aplicação implementa a arquitetu
 
 <br/>
 
-## Modules and layers
-
-A implementação atual da aplicação contem os seguintes módulos:
+## Clean architecture layers and impementation modules
+Abaixo a relação das camadas da arquitetura limpa com os módulos criados na aplicação.
 
 | Clean architecture layer | My module      |
 |--------------------------|----------------|
@@ -17,8 +16,10 @@ A implementação atual da aplicação contem os seguintes módulos:
 <br/>
 
 ## Relationship
-Na imagem abaixo podemos ver um exemplo de como as camadas da aplicação se relacionam seguindo a regra de dependência.
+Além de apresentar a relação dos módulos com as camadas da arquitetura limpa é importante demonstrar como os módulos interagem uns com os outros e quais são suas fronteiras. Abaixo podemos analisar esses pontos de forma visual.
 
 <img src="modules-relationship.png" /> 
 
 <br/>
+
+## Request flow
