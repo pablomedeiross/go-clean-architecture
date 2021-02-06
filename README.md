@@ -3,7 +3,7 @@ This project is a sample of an implementation of Clean Architecture in GoLang.
 
 <br/>
 
-### Summary
+## Summary
 The clean architecture is a model proposed by [Robert C. Martin (Uncle Bob)](http://cleancoder.com/).
 Briefly, this model seeks to strengthen the following points in our software:
 
@@ -13,24 +13,23 @@ Briefly, this model seeks to strengthen the following points in our software:
 
 <br/>
 
-### Use case
+## Use case
 The use case chosen for this sample is a service of user's management. It was selected for keep the simplicity. With it we'll can: 
 
-- [create new user]()
-- [search users]()
-- [remove user]()
-- [set user's password]()
+- Create new user
+- Search users
+- Remove user
+- Set user's password
 
 <br/>
 
-### More about
-- [Architecture](architecture.md)
-- [Tests](tests.md)
-- [Api](api.md)
+## More about
+- [My implementation of clean architecture](my-implementation.md)
+- [Tests](test-implementation-architecture.md)
 
 <br/>
 
-### Technologies
+## Technologies
 
 - [Golang](https://golang.org/)
 - [Docker](https://www.docker.com/)
@@ -38,7 +37,7 @@ The use case chosen for this sample is a service of user's management. It was se
 
 <br/>
 
-### Running
+## Running
 
 ```bash
 

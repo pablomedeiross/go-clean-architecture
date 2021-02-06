@@ -1,2 +1,1 @@
-module domain
-module user
+module github.com/pablomedeiross/go-clean-architecture
