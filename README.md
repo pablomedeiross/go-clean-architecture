@@ -16,18 +16,16 @@ Briefly, this model seeks to strengthen the following points in our software:
 ## Use case
 The use case chosen for this sample is a service of user's management. It was selected for keep the simplicity. With it we'll can: 
 
-- [Create new user]()
-- [Search users]()
-- [Remove user]()
-- [Set user's password]()
+- Create new user
+- Search users
+- Remove user
+- Set user's password
 
 <br/>
 
 ## More about
-- [Clean architecture](clean-architecture.md)
 - [My implementation of clean architecture](my-implementation.md)
-- [Tests](tests.md)
-- [Api](api.md)
+- [Tests](test-implementation-architecture.md)
 
 <br/>
 
