@@ -26,7 +26,7 @@ type User interface {
 
 // New is a factory of User
 func New(name string, email string, age int) (User, error) {
-	return createUser(name, email, age)
+	return build(name, email, age)
 }
 
 
@@ -40,7 +40,7 @@ func NewPersisted(id int, name string, email string, age int, addressesIds []str
 		err = errors.New("Error creating new User with arguments : " + name + ", " + email + ", " + strconv.Itoa(age))
 
 	} else {
-		us, err = createUser(name, email, age)
+		us, err = build(name, email, age)
 
 		if err == nil {
 
@@ -57,7 +57,7 @@ func NewPersisted(id int, name string, email string, age int, addressesIds []str
 	return us, err
 }
 
-func createUser(name string, email string, age int) (User, error) {
+func build(name string, email string, age int) (User, error) {
 
 	var us User
 	var err error

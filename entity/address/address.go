@@ -31,23 +31,34 @@ func New(street string, number int, neighborhood string, zipCode int) (Address, 
 // NewPersisted is a factory method for Address persisted
 func NewPersisted(ID string, street string, number int, neighborhood string, zipCode int) (Address, error) {
 
-	var addr address
+	var addr Address
 	var err error
 
 	if len(ID) == 0 {
 		err = errors.New("Error creating new Address, ID is null")
 
-	} else if err != nil {
+	} else if err == nil {
+
 		addr, err = build(street, number, neighborhood, zipCode)
-		addr.ID = ID
+
+		if err == nil {
+			
+			addr = address {
+				ID : ID,
+				street: addr.Street(),
+				number: addr.Number(),
+				neighborhood: addr.Neighborhood(),
+				zipCode: addr.ZipCode(),
+			}
+		}
 	}
 
 	return addr, err
 }
 
-func build(street string, number int, neighborhood string, zipCode int) (address, error) {
+func build(street string, number int, neighborhood string, zipCode int) (Address, error) {
 
-	var addr address
+	var addr Address
 	err := validateNewRequiredParams(street, number, neighborhood, zipCode)
 
 	if err == nil {
