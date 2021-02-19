@@ -23,7 +23,31 @@ func TestValidationNew(t *testing.T) {
 				emails[i] + ", " +
 				strconv.Itoa(ages[i]))
 
-		_, errorActual := user.New(names[i], emails[i], ages[i])
+		userTest, errorActual := user.New(names[i], emails[i], ages[i])
+		assert.Nil(t, userTest, "Error, user created withou requested parameters!")
+		assert.Equal(t, errorExpected, errorActual, "Invalid error message !" + errorActual.Error())
+	}
+}
+
+func TestValidationNewPersisted(t *testing.T) {
+
+	ids, names, emails, ages, addressesIds :=
+		[]int{1234, 12345678910, 12345678910, 12345678910},
+		[]string{"name2", "", "name3", "name4"},
+		[]string{"test@gmail.com","test@hotmail.com", "", "test4@live.com","test4@bol.com"},
+		[]int{10, 11, 192, 0, 181},
+		[][]string{{"testAddress1"},{"testAddress2"},{"testAddress3"},{"testAddress4"}, nil}
+
+	for i, _ := range names {
+
+		errorExpected := errors.New(
+			"Error creating new User with arguments : " +
+			names[i] + ", " +
+			emails[i] + ", " +
+			strconv.Itoa(ages[i]))
+
+		userTest, errorActual := user.NewPersisted(ids[i], names[i], emails[i], ages[i], addressesIds[i])
+		assert.Nil(t, userTest, "Error, user created withou requested parameters!")
 		assert.Equal(t, errorExpected, errorActual, "Invalid error message !" + errorActual.Error())
 	}
 }
@@ -52,7 +76,7 @@ func TestGetAge(t *testing.T) {
 func TestGetAdressesIDs(t *testing.T) {
 
 	addressesIDsExpected := []string{"122445"}
-	userTest, _ := user.NewPersisted(1, "name", "email@gmail.com", 12, addressesIDsExpected)
+	userTest, _ := user.NewPersisted(12345678910, "name", "email@gmail.com", 12, addressesIDsExpected)
 	assert.Equal(t, addressesIDsExpected, userTest.AddressesIDs(), "Invalid addresses returned from AddressesIDs()")
 }
 
@@ -65,11 +89,10 @@ func TestAddAddressIDInUserWithoutAddressId(t *testing.T) {
 	assert.Nil(t, err)
 }
 
-//TODO:
 func TestAddAddressInUserWithSameAddress(t *testing.T) {
 
 	addressId := "1223"
-	user, _ := user.NewPersisted(1, "name", "email@gmail.com", 10, []string{addressId})
+	user, _ := user.NewPersisted(12345678910, "name", "email@gmail.com", 10, []string{addressId})
 	err := user.AddAddressID(addressId)
 
 	msgErrorExpected := "AddressId already exists in User: " + "name"

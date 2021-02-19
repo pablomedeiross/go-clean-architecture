@@ -24,30 +24,40 @@ type User interface {
 	AddAddressID(AddAddressID string) error
 }
 
+// New is a factory of User
+func New(name string, email string, age int) (User, error) {
+	return createUser(name, email, age)
+}
+
+
 // NewPersisted is a factory of User
 func NewPersisted(id int, name string, email string, age int, addressesIds []string) (User, error) {
 
 	var us User
 	var err error
 
-	if len(strconv.Itoa(id)) < 11 || len(name) <= 0 || len(email) <= 0 || age <= 0 {
+	if len(strconv.Itoa(id)) < 11 || addressesIds == nil || len(addressesIds) < 0 {
 		err = errors.New("Error creating new User with arguments : " + name + ", " + email + ", " + strconv.Itoa(age))
 
 	} else {
-		us = user{
-			id:           id,
-			name:         name,
-			email:        email,
-			age:          age,
-			addressesIds: addressesIds,
+		us, err = createUser(name, email, age)
+
+		if err == nil {
+
+			us = user {
+				id: id,
+				name: us.Name(),
+				email: us.Email(),
+				age: us.Age(),
+				addressesIds: addressesIds,
+			}
 		}
 	}
 
 	return us, err
 }
 
-// New is a factory of User
-func New(name string, email string, age int) (User, error) {
+func createUser(name string, email string, age int) (User, error) {
 
 	var us User
 	var err error
