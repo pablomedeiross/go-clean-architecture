@@ -10,6 +10,7 @@ type createUserResponse struct {
 	id int
 }
 
+// NewCreateUserReponse is a factory of CreateUserResponse 
 func NewCreateUserReponse(id int) (CreateUserResponse, error) {
 
 	var response CreateUserResponse
@@ -25,6 +26,7 @@ func NewCreateUserReponse(id int) (CreateUserResponse, error) {
 	return response, err
 }
 
+// ID return CreateUserResponse id
 func (response createUserResponse) ID() int {
 	return response.id
 }
