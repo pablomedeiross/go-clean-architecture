@@ -15,16 +15,16 @@ type user struct {
 
 // User entity
 type User interface {
-	ID() string
+	Id() string
 	Name() string
 	Email() string
 	Age() int
-	AddressesIDs() []string
-	AddAddressID(addressId string) error
+	AddressesIds() []string
+	AddAddressId(addressId string) error
 }
 
 // Id return User id
-func (us user) ID() string {
+func (us user) Id() string {
 	return us.id
 }
 
@@ -44,20 +44,20 @@ func (us user) Age() int {
 }
 
 // AddressesIDs return User addresses
-func (us user) AddressesIDs() []string {
+func (us user) AddressesIds() []string {
 	return us.addressesIds
 }
 
 // AddAddressID include new address in User
-func (us *user) AddAddressID(addressID string) error {
+func (us *user) AddAddressId(addressId string) error {
 
 	var err error
 
-	if exists := addressExists(addressID, us.addressesIds); exists {
+	if exists := addressExists(addressId, us.addressesIds); exists {
 		err = errors.New("AddressId already exists in User: " + us.Name())
 	}
 
-	us.addressesIds = append(us.addressesIds, addressID)
+	us.addressesIds = append(us.addressesIds, addressId)
 
 	return err
 }

@@ -33,8 +33,8 @@ func TestValidBuildOnlyRequestParams(t *testing.T) {
 func TestValidBuildWithAllParams(t *testing.T) {
 
 	usr, err := user.NewBuilder().Id(idTest).Name(nameTest).Email(emailTest).Age(ageTest).AddressesIds(addressesIdsTest).Build()
-	assert.Equal(t, usr.ID(), idTest, msgErrorInvalidParam)
-	assert.Equal(t, usr.AddressesIDs(), addressesIdsTest, msgErrorInvalidParam)
+	assert.Equal(t, usr.Id(), idTest, msgErrorInvalidParam)
+	assert.Equal(t, usr.AddressesIds(), addressesIdsTest, msgErrorInvalidParam)
 	validateRequestParams(t, usr, err)
 }
 
