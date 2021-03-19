@@ -7,8 +7,6 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-var msgErrorInvalidParam string = "Param different from expected when build Address"
-
 func TestInvalidBuildAddress(t *testing.T) {
 
 	var invalidBuilders []address.Builder = []address.Builder{
@@ -38,7 +36,7 @@ func TestBuildAddressWithAllParams(t *testing.T) {
 		Build()
 
 	validateRequestParams(t, address, err)
-	assert.EqualValues(t, idTest, address.Id(), msgErrorInvalidParam)
+	assert.Equal(t, idTest, address.Id(), msgErrorInvalidParam)
 }
 
 func TestBuildAddressWithoutID(t *testing.T) {
@@ -57,8 +55,8 @@ func TestBuildAddressWithoutID(t *testing.T) {
 func validateRequestParams(t *testing.T, address address.Address, err error) {
 
 	assert.Nil(t, err, "Error non nil when create Address from Builder")
-	assert.EqualValues(t, streetTest, address.Street(), msgErrorInvalidParam)
-	assert.EqualValues(t, numberTest, address.Number(), msgErrorInvalidParam)
-	assert.EqualValues(t, neighborhoodTest, address.Neighborhood(), msgErrorInvalidParam)
-	assert.EqualValues(t, zipcodeTest, address.Zipcode(), msgErrorInvalidParam)
+	assert.Equal(t, streetTest, address.Street(), msgErrorInvalidParam)
+	assert.Equal(t, numberTest, address.Number(), msgErrorInvalidParam)
+	assert.Equal(t, neighborhoodTest, address.Neighborhood(), msgErrorInvalidParam)
+	assert.Equal(t, zipcodeTest, address.Zipcode(), msgErrorInvalidParam)
 }

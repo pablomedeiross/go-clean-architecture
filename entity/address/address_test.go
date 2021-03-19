@@ -24,7 +24,7 @@ func init() {
 func TestGetID(t *testing.T) {
 
 	idExpected := idTest
-	assert.EqualValues(t, addressTest.Id(), idExpected, "Error GetId() return another value")
+	assert.Equal(t, addressTest.Id(), idExpected, "Error GetId() return another value")
 }
 
 func TestGetStreet(t *testing.T) {
@@ -36,7 +36,7 @@ func TestGetStreet(t *testing.T) {
 		"expected: " +
 		streetExpected
 
-	assert.EqualValues(t, streetExpected, addressTest.Street(), msgError)
+	assert.Equal(t, streetExpected, addressTest.Street(), msgError)
 }
 
 func TestGetNumber(t *testing.T) {
@@ -48,7 +48,7 @@ func TestGetNumber(t *testing.T) {
 		"expected: " +
 		strconv.Itoa(numberExpected)
 
-	assert.EqualValues(t, numberExpected, addressTest.Number(), msgError)
+	assert.Equal(t, numberExpected, addressTest.Number(), msgError)
 }
 
 func TestGetNeighborhood(t *testing.T) {
@@ -61,7 +61,7 @@ func TestGetNeighborhood(t *testing.T) {
 			"expected: " +
 			neighborhoodExpected
 
-	assert.EqualValues(t, neighborhoodExpected, addressTest.Neighborhood(), msgError)
+	assert.Equal(t, neighborhoodExpected, addressTest.Neighborhood(), msgError)
 }
 
 func TestGetZipCode(t *testing.T) {
@@ -73,5 +73,5 @@ func TestGetZipCode(t *testing.T) {
 		"expected: " +
 		strconv.Itoa(zipCodeExpected)
 
-	assert.EqualValues(t, zipCodeExpected, addressTest.Zipcode(), msgError)
+	assert.Equal(t, zipCodeExpected, addressTest.Zipcode(), msgError)
 }

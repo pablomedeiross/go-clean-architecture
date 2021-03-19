@@ -66,5 +66,7 @@ func TestAddAddressIDInUserWithoutAddressId(t *testing.T) {
 		Build()
 
 	err := usr.AddAddressID(addressID)
+
+	assert.Equal(t, usr.AddressesIDs()[0], addressID, "AddressID is different from expected")
 	assert.Nil(t, err, "Error occurred when Address was instantiated")
 }

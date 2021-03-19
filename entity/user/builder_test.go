@@ -7,9 +7,6 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-var msgErrorInvalidParam string = "Param different from expected when build User"
-var msgErrorCreateInvalidUser string = "User created without requested params"
-
 func TestInvalidBuild(t *testing.T) {
 
 	builders := []user.Builder{
