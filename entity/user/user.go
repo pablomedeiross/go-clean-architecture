@@ -2,12 +2,11 @@ package user
 
 import (
 	"errors"
-	"strconv"
 )
 
 // User entity implemantation
 type user struct {
-	id           int
+	id           string
 	name         string
 	email        string
 	age          int
@@ -16,68 +15,16 @@ type user struct {
 
 // User entity
 type User interface {
-	ID() int
+	ID() string
 	Name() string
 	Email() string
 	Age() int
 	AddressesIDs() []string
-	AddAddressID(AddAddressID string) error
-}
-
-// New is a factory of User
-func New(name string, email string, age int) (User, error) {
-	return build(name, email, age)
-}
-
-
-// NewPersisted is a factory of User
-func NewPersisted(id int, name string, email string, age int, addressesIds []string) (User, error) {
-
-	var us User
-	var err error
-
-	if len(strconv.Itoa(id)) < 11 || addressesIds == nil || len(addressesIds) < 0 {
-		err = errors.New("Error creating new User with arguments : " + name + ", " + email + ", " + strconv.Itoa(age))
-
-	} else {
-		us, err = build(name, email, age)
-
-		if err == nil {
-
-			us = user {
-				id: id,
-				name: us.Name(),
-				email: us.Email(),
-				age: us.Age(),
-				addressesIds: addressesIds,
-			}
-		}
-	}
-
-	return us, err
-}
-
-func build(name string, email string, age int) (User, error) {
-
-	var us User
-	var err error
-
-	if len(name) <= 0 || len(email) <= 0 || age <= 0 {
-		err = errors.New("Error creating new User with arguments : " + name + ", " + email + ", " + strconv.Itoa(age))
-
-	} else {
-		us = user{
-			name:  name,
-			email: email,
-			age:   age,
-		}
-	}
-
-	return us, err
+	AddAddressID(addressId string) error
 }
 
 // Id return User id
-func (us user) ID() int {
+func (us user) ID() string {
 	return us.id
 }
 
@@ -102,7 +49,7 @@ func (us user) AddressesIDs() []string {
 }
 
 // AddAddressID include new address in User
-func (us user) AddAddressID(addressID string) error {
+func (us *user) AddAddressID(addressID string) error {
 
 	var err error
 

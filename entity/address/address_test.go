@@ -8,121 +8,70 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestNewValidations(t *testing.T) {
+var addressTest address.Address
 
-	streets, numbers, neighborhoods, zipCodes :=
-		[]string{"", "street2", "street3", "street4"},
-		[]int{12345, 0, 5313, 14664},
-		[]string{"neighborhood1", "neighborhood2", "", "neighborhood4"},
-		[]int{10450103, 10455112, 90750103, 0}
-
-	for i, _ := range streets {
-
-		errorExpected :=
-			"Error creating new Address with arguments : " +
-				streets[i] + ", " +
-				strconv.Itoa(numbers[i]) + ", " +
-				neighborhoods[i] + ", " +
-				strconv.Itoa(zipCodes[i])
-
-		addressActual, errorActual := address.New(streets[i], numbers[i], neighborhoods[i], zipCodes[i])
-		assert.Nil(t, addressActual, "Address created without requested parameters")
-		assert.EqualError(t, errorActual, errorExpected, "Address created without requested")
-	}
-}
-
-func TestNewPersistedWithoutId(t * testing.T) {
-
-	addressActual, errorActual := address.NewPersisted("", "street1", 12345, "neighborhood1", 1312321)
-	assert.Nil(t, addressActual, "Error Addresses created without ID")
-	assert.EqualError(t, errorActual, "Error creating new Address, ID is null")
-}
-
-func TestNewPersistedValidations(t *testing.T) {
-
-	streets, numbers, neighborhoods, zipCodes :=
-		[]string{"", "street2", "street3", "street4"},
-		[]int{12345, 0, 5313, 14664},
-		[]string{"neighborhood2", "neighborhood3", "", "neighborhood4"},
-		[]int{10455112, 90750103, 907501091, 0}
-
-	for i, _ := range streets {
-
-		errorExpected :=
-			"Error creating new Address with arguments : " +
-				streets[i] + ", " +
-				strconv.Itoa(numbers[i]) + ", " +
-				neighborhoods[i] + ", " +
-				strconv.Itoa(zipCodes[i])
-
-		addressActual, errorActual := address.NewPersisted("2313", streets[i], numbers[i], neighborhoods[i], zipCodes[i])
-		assert.Nil(t, addressActual, "Address created without requested parameters")
-		assert.EqualError(t, errorActual, errorExpected, "Address created without requested")
-	}
+func init() {
+	addressTest, _ = address.
+		NewBuilder().
+		Id(idTest).
+		Street(streetTest).
+		Number(numberTest).
+		Neighborhood(neighborhoodTest).
+		Zipcode(zipcodeTest).
+		Build()
 }
 
 func TestGetID(t *testing.T) {
-	idExpected := "ID"
-	addressActual, _ := address.NewPersisted(idExpected,"streetExpected", 1112, "neighborhood", 123452341)
-	assert.Equal(t, addressActual.GetID(), idExpected, "Error GetId() return another value")
+
+	idExpected := idTest
+	assert.Equal(t, addressTest.Id(), idExpected, "Error GetId() return another value")
 }
 
 func TestGetStreet(t *testing.T) {
 
-	streetExpected := "test street"
+	streetExpected := streetTest
 
-	addressActual, _ := address.New(streetExpected, 1112, "neighborhood", 123452341)
+	msgError := "Invalid street in GetStreet() test. Actual : " +
+		addressTest.Street() +
+		"expected: " +
+		streetExpected
 
-	if addressActual.Street() != streetExpected {
-		t.Errorf(
-			"Invalid street in GetStreet() test. Actual : " +
-				addressActual.Street() +
-				"expected: " +
-				streetExpected)
-	}
+	assert.Equal(t, streetExpected, addressTest.Street(), msgError)
 }
 
 func TestGetNumber(t *testing.T) {
 
-	numberExpected := 4312
+	numberExpected := numberTest
 
-	addressActual, _ := address.New("test", numberExpected, "neighborhood", 123452341)
+	msgError := "Invalid number in GetNumber() test. Actual : " +
+		strconv.Itoa(addressTest.Number()) +
+		"expected: " +
+		strconv.Itoa(numberExpected)
 
-	if addressActual.Number() != numberExpected {
-		t.Errorf(
-			"Invalid number in GetNumber() test. Actual : " +
-				strconv.Itoa(addressActual.Number()) +
-				"expected: " +
-				strconv.Itoa(numberExpected))
-	}
+	assert.Equal(t, numberExpected, addressTest.Number(), msgError)
 }
 
 func TestGetNeighborhood(t *testing.T) {
 
-	neighborhoodExpected := "test neighborhood"
+	neighborhoodExpected := neighborhoodTest
 
-	addressActual, _ := address.New("test", 1112, neighborhoodExpected, 123452341)
+	msgError :=
+		"Invalid neighborhood in GetNeighborhood() test. Actual : " +
+			addressTest.Neighborhood() +
+			"expected: " +
+			neighborhoodExpected
 
-	if addressActual.Neighborhood() != neighborhoodExpected {
-		t.Errorf(
-			"Invalid neighborhood in GetNeighborhood() test. Actual : " +
-				addressActual.Neighborhood() +
-				"expected: " +
-				neighborhoodExpected)
-	}
+	assert.Equal(t, neighborhoodExpected, addressTest.Neighborhood(), msgError)
 }
 
 func TestGetZipCode(t *testing.T) {
 
-	zipCodeExpected := 4312
+	zipCodeExpected := zipcodeTest
 
-	addressActual, _ := address.New("test", 124, "neighborhood", zipCodeExpected)
+	msgError := "Invalid number in GetZipCode() test. Actual : " +
+		strconv.Itoa(addressTest.Zipcode()) +
+		"expected: " +
+		strconv.Itoa(zipCodeExpected)
 
-	if addressActual.ZipCode() != zipCodeExpected {
-		t.Errorf(
-			"Invalid number in GetZipCode() test. Actual : " +
-				strconv.Itoa(addressActual.ZipCode()) +
-				"expected: " +
-				strconv.Itoa(zipCodeExpected))
-	}
+	assert.Equal(t, zipCodeExpected, addressTest.Zipcode(), msgError)
 }
