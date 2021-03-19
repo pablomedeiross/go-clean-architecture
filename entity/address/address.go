@@ -2,25 +2,25 @@ package address
 
 // Address entity interface
 type Address interface {
-	GetID() string
+	Id() string
 	Street() string
 	Number() int
 	Neighborhood() string
-	ZipCode() int
+	Zipcode() int
 }
 
 // address is a entity implementation
 type address struct {
-	ID           string
+	id           string
 	street       string
 	number       int
 	neighborhood string
-	zipCode      int
+	zipcode      int
 }
 
 // GetID return Address identifier
-func (ad address) GetID() string {
-	return ad.ID
+func (ad address) Id() string {
+	return ad.id
 }
 
 // Street return Address Street
@@ -39,6 +39,6 @@ func (ad address) Neighborhood() string {
 }
 
 // ZipCode return Address ZipCodeilk
-func (ad address) ZipCode() int {
-	return ad.zipCode
+func (ad address) Zipcode() int {
+	return ad.zipcode
 }

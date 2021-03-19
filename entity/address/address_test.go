@@ -11,18 +11,25 @@ import (
 var addressTest address.Address
 
 func init() {
-	addressTest, _ = address.NewBuilder().ID(Id).Street(Street).Number(Number).Neighborhood(Neighborhood).ZipCode(Zipcode).Build()
+	addressTest, _ = address.
+		NewBuilder().
+		Id(idTest).
+		Street(streetTest).
+		Number(numberTest).
+		Neighborhood(neighborhoodTest).
+		Zipcode(zipcodeTest).
+		Build()
 }
 
 func TestGetID(t *testing.T) {
 
-	idExpected := Id
-	assert.EqualValues(t, addressTest.GetID(), idExpected, "Error GetId() return another value")
+	idExpected := idTest
+	assert.EqualValues(t, addressTest.Id(), idExpected, "Error GetId() return another value")
 }
 
 func TestGetStreet(t *testing.T) {
 
-	streetExpected := Street
+	streetExpected := streetTest
 
 	msgError := "Invalid street in GetStreet() test. Actual : " +
 		addressTest.Street() +
@@ -34,7 +41,7 @@ func TestGetStreet(t *testing.T) {
 
 func TestGetNumber(t *testing.T) {
 
-	numberExpected := Number
+	numberExpected := numberTest
 
 	msgError := "Invalid number in GetNumber() test. Actual : " +
 		strconv.Itoa(addressTest.Number()) +
@@ -46,7 +53,7 @@ func TestGetNumber(t *testing.T) {
 
 func TestGetNeighborhood(t *testing.T) {
 
-	neighborhoodExpected := Neighborhood
+	neighborhoodExpected := neighborhoodTest
 
 	msgError :=
 		"Invalid neighborhood in GetNeighborhood() test. Actual : " +
@@ -59,12 +66,12 @@ func TestGetNeighborhood(t *testing.T) {
 
 func TestGetZipCode(t *testing.T) {
 
-	zipCodeExpected := Zipcode
+	zipCodeExpected := zipcodeTest
 
 	msgError := "Invalid number in GetZipCode() test. Actual : " +
-		strconv.Itoa(addressTest.ZipCode()) +
+		strconv.Itoa(addressTest.Zipcode()) +
 		"expected: " +
 		strconv.Itoa(zipCodeExpected)
 
-	assert.EqualValues(t, zipCodeExpected, addressTest.ZipCode(), msgError)
+	assert.EqualValues(t, zipCodeExpected, addressTest.Zipcode(), msgError)
 }

@@ -12,10 +12,10 @@ var msgErrorInvalidParam string = "Param different from expected when build Addr
 func TestInvalidBuildAddress(t *testing.T) {
 
 	var invalidBuilders []address.Builder = []address.Builder{
-		address.NewBuilder().ID(Id).Street(Street).Number(Number).Neighborhood(Neighborhood),
-		address.NewBuilder().ID(Id).Street(Street).Number(Number).ZipCode(Zipcode),
-		address.NewBuilder().ID(Id).Street(Street).Neighborhood(Neighborhood).ZipCode(Zipcode),
-		address.NewBuilder().ID(Id).Number(Number).Neighborhood(Neighborhood).ZipCode(Zipcode),
+		address.NewBuilder().Id(idTest).Street(streetTest).Number(numberTest).Neighborhood(neighborhoodTest),
+		address.NewBuilder().Id(idTest).Street(streetTest).Number(numberTest).Zipcode(zipcodeTest),
+		address.NewBuilder().Id(idTest).Street(streetTest).Neighborhood(neighborhoodTest).Zipcode(zipcodeTest),
+		address.NewBuilder().Id(idTest).Number(numberTest).Neighborhood(neighborhoodTest).Zipcode(zipcodeTest),
 	}
 
 	for _, builder := range invalidBuilders {
@@ -27,22 +27,38 @@ func TestInvalidBuildAddress(t *testing.T) {
 }
 
 func TestBuildAddressWithAllParams(t *testing.T) {
-	address, err := address.NewBuilder().ID(Id).Street(Street).Number(Number).Neighborhood(Neighborhood).ZipCode(Zipcode).Build()
-	validRequestParams(t, address, err)
-	assert.EqualValues(t, Id, address.GetID(), msgErrorInvalidParam)
+
+	address, err := address.
+		NewBuilder().
+		Id(idTest).
+		Street(streetTest).
+		Number(numberTest).
+		Neighborhood(neighborhoodTest).
+		Zipcode(zipcodeTest).
+		Build()
+
+	validateRequestParams(t, address, err)
+	assert.EqualValues(t, idTest, address.Id(), msgErrorInvalidParam)
 }
 
 func TestBuildAddressWithoutID(t *testing.T) {
 
-	address, err := address.NewBuilder().Street(Street).Number(Number).Neighborhood(Neighborhood).ZipCode(Zipcode).Build()
-	validRequestParams(t, address, err)
+	address, err := address.
+		NewBuilder().
+		Street(streetTest).
+		Number(numberTest).
+		Neighborhood(neighborhoodTest).
+		Zipcode(zipcodeTest).
+		Build()
+
+	validateRequestParams(t, address, err)
 }
 
-func validRequestParams(t *testing.T, address address.Address, err error) {
+func validateRequestParams(t *testing.T, address address.Address, err error) {
 
 	assert.Nil(t, err, "Error non nil when create Address from Builder")
-	assert.EqualValues(t, Street, address.Street(), msgErrorInvalidParam)
-	assert.EqualValues(t, Number, address.Number(), msgErrorInvalidParam)
-	assert.EqualValues(t, Neighborhood, address.Neighborhood(), msgErrorInvalidParam)
-	assert.EqualValues(t, Zipcode, address.ZipCode(), msgErrorInvalidParam)
+	assert.EqualValues(t, streetTest, address.Street(), msgErrorInvalidParam)
+	assert.EqualValues(t, numberTest, address.Number(), msgErrorInvalidParam)
+	assert.EqualValues(t, neighborhoodTest, address.Neighborhood(), msgErrorInvalidParam)
+	assert.EqualValues(t, zipcodeTest, address.Zipcode(), msgErrorInvalidParam)
 }

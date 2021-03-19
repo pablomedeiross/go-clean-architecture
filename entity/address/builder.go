@@ -5,12 +5,13 @@ import (
 	"strconv"
 )
 
+// Builder of Address entity
 type Builder interface {
-	ID(id string) Builder
+	Id(id string) Builder
 	Street(street string) Builder
 	Number(number int) Builder
 	Neighborhood(neighborhood string) Builder
-	ZipCode(zipcode int) Builder
+	Zipcode(zipcode int) Builder
 	Build() (Address, error)
 }
 
@@ -22,35 +23,42 @@ type builder struct {
 	zipcode      int
 }
 
+// NewBuilder return a new builder of User entity
 func NewBuilder() Builder {
 	return &builder{}
 }
 
-func (b *builder) ID(id string) Builder {
+// Id set a id for the entity on building
+func (b *builder) Id(id string) Builder {
 	b.id = id
 	return b
 }
 
+// Street set a street for the entity on building
 func (b *builder) Street(street string) Builder {
 	b.street = street
 	return b
 }
 
+// Number set a number for the entity on building
 func (b *builder) Number(number int) Builder {
 	b.number = number
 	return b
 }
 
+// Neighborhood set a neighborhood for the entity on building
 func (b *builder) Neighborhood(neighborhood string) Builder {
 	b.neighborhood = neighborhood
 	return b
 }
 
-func (b *builder) ZipCode(zipcode int) Builder {
+// Zipcode set a zipcode for the entity on building
+func (b *builder) Zipcode(zipcode int) Builder {
 	b.zipcode = zipcode
 	return b
 }
 
+// Build return a new Address or a error in case of invalid arguments
 func (b *builder) Build() (Address, error) {
 
 	var err error
@@ -67,7 +75,7 @@ func (b *builder) Build() (Address, error) {
 		b.number,
 		b.neighborhood,
 		b.zipcode,
-	}, nil
+	}, err
 }
 
 func (b builder) validateNewRequiredParams() error {
