@@ -7,6 +7,9 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+var msgErrorInvalidParam string = "Param different from expected when build User"
+var msgErrorCreateInvalidUser string = "User created without requested params"
+
 func TestInvalidBuild(t *testing.T) {
 
 	builders := []user.Builder{
@@ -19,30 +22,29 @@ func TestInvalidBuild(t *testing.T) {
 
 		user, err := builder.Build()
 
-		assert.Nil(t, user)
-		assert.Error(t, err)
+		assert.Nil(t, user, msgErrorCreateInvalidUser)
+		assert.Error(t, err, msgErrorCreateInvalidUser)
 	}
 }
 
 func TestValidBuildOnlyRequestParams(t *testing.T) {
 
 	usr, err := user.NewBuilder().Name(nameTest).Email(emailTest).Age(ageTest).Build()
-	assert.Nil(t, err)
-	validateRequestParams(t, usr)
+	validateRequestParams(t, usr, err)
 }
 
 func TestValidBuildWithAllParams(t *testing.T) {
 
 	usr, err := user.NewBuilder().Id(idTest).Name(nameTest).Email(emailTest).Age(ageTest).AddressesIds(addressesIdsTest).Build()
-	assert.Nil(t, err)
-	assert.Equal(t, usr.ID(), idTest)
-	assert.Equal(t, usr.AddressesIDs(), addressesIdsTest)
-	validateRequestParams(t, usr)
+	assert.Equal(t, usr.ID(), idTest, msgErrorInvalidParam)
+	assert.Equal(t, usr.AddressesIDs(), addressesIdsTest, msgErrorInvalidParam)
+	validateRequestParams(t, usr, err)
 }
 
-func validateRequestParams(t *testing.T, usr user.User) {
+func validateRequestParams(t *testing.T, usr user.User, err error) {
 
-	assert.Equal(t, usr.Name(), nameTest)
-	assert.Equal(t, usr.Email(), emailTest)
-	assert.Equal(t, usr.Age(), ageTest)
+	assert.Nil(t, err, "Error occurred when Build a valid new User")
+	assert.Equal(t, usr.Name(), nameTest, msgErrorInvalidParam)
+	assert.Equal(t, usr.Email(), emailTest, msgErrorInvalidParam)
+	assert.Equal(t, usr.Age(), ageTest, msgErrorInvalidParam)
 }
