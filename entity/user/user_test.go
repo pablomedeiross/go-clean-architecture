@@ -21,6 +21,12 @@ func init() {
 		Build()
 }
 
+func TestGetId(t *testing.T) {
+
+	idExpected := idTest
+	assert.Equal(t, idExpected, userTest.Id(), "Invalid id return from Id()")
+}
+
 func TestGetName(t *testing.T) {
 
 	nameExpected := nameTest
@@ -42,13 +48,13 @@ func TestGetAge(t *testing.T) {
 func TestGetAdressesIDs(t *testing.T) {
 
 	addressesIDsExpected := addressesIdsTest
-	assert.Equal(t, addressesIDsExpected, userTest.AddressesIDs(), "Invalid addresses returned from AddressesIDs()")
+	assert.Equal(t, addressesIDsExpected, userTest.AddressesIds(), "Invalid addresses returned from AddressesIDs()")
 }
 
 func TestAddAddressInUserWithSameAddress(t *testing.T) {
 
 	addressId := addressesIdsTest[0]
-	err := userTest.AddAddressID(addressId)
+	err := userTest.AddAddressId(addressId)
 
 	msgErrorExpected := "AddressId already exists in User: " + userTest.Name()
 	assert.EqualError(t, err, msgErrorExpected, "Error AddAddress add same address in User")
@@ -65,8 +71,8 @@ func TestAddAddressIDInUserWithoutAddressId(t *testing.T) {
 		Age(ageTest).
 		Build()
 
-	err := usr.AddAddressID(addressID)
+	err := usr.AddAddressId(addressID)
 
-	assert.Equal(t, usr.AddressesIDs()[0], addressID, "AddressID is different from expected")
+	assert.Equal(t, usr.AddressesIds()[0], addressID, "AddressID is different from expected")
 	assert.Nil(t, err, "Error occurred when Address was instantiated")
 }
