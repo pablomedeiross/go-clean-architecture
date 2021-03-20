@@ -61,21 +61,20 @@ func (b *builder) Zipcode(zipcode int) Builder {
 // Build return a new Address or a error in case of invalid arguments
 func (b *builder) Build() (Address, error) {
 
-	var err error
+	var addr Address
+	var err error = b.validateNewRequiredParams()
 
-	err = b.validateNewRequiredParams()
-
-	if err != nil {
-		return nil, err
+	if err == nil {
+		addr = address{
+			b.id,
+			b.street,
+			b.number,
+			b.neighborhood,
+			b.zipcode,
+		}
 	}
 
-	return address{
-		b.id,
-		b.street,
-		b.number,
-		b.neighborhood,
-		b.zipcode,
-	}, err
+	return addr, err
 }
 
 func (b builder) validateNewRequiredParams() error {

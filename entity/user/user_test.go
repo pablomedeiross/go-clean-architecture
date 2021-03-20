@@ -7,53 +7,58 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+const idTestUser string = "123"
+const nameTestUser string = "Name"
+const emailTestUser string = "Email@gmail.com"
+const ageTestUser int = 12
+
+var addressesIdsTestUser []string = []string{"1", "2"}
+
+const msgErrorInvalidParamUser string = "Param different from expected when build User"
+const msgErrorCreateInvalidUser string = "User created without requested params"
+
 var userTest user.User
 
 func init() {
 
 	userTest, _ = user.
 		NewBuilder().
-		Id(idTest).
-		Name(nameTest).
-		Email(emailTest).
-		Age(ageTest).
-		AddressesIds(addressesIdsTest).
+		Id(idTestUser).
+		Name(nameTestUser).
+		Email(emailTestUser).
+		Age(ageTestUser).
+		AddressesIds(addressesIdsTestUser).
 		Build()
 }
 
 func TestGetId(t *testing.T) {
 
-	idExpected := idTest
-	assert.Equal(t, idExpected, userTest.Id(), "Invalid id return from Id()")
+	assert.Equal(t, idTestUser, userTest.Id(), "Invalid id return from Id()")
 }
 
 func TestGetName(t *testing.T) {
 
-	nameExpected := nameTest
-	assert.Equal(t, nameExpected, userTest.Name(), "Invalid name returned from Name()")
+	assert.Equal(t, nameTestUser, userTest.Name(), "Invalid name returned from Name()")
 }
 
 func TestGetEmail(t *testing.T) {
 
-	emailExpected := emailTest
-	assert.Equal(t, emailExpected, userTest.Email(), "Invalid email returned from Email()")
+	assert.Equal(t, emailTestUser, userTest.Email(), "Invalid email returned from Email()")
 }
 
 func TestGetAge(t *testing.T) {
 
-	ageExpected := ageTest
-	assert.Equal(t, ageExpected, userTest.Age(), "Invalid age returned from Age()")
+	assert.Equal(t, ageTestUser, userTest.Age(), "Invalid age returned from Age()")
 }
 
 func TestGetAdressesIDs(t *testing.T) {
 
-	addressesIDsExpected := addressesIdsTest
-	assert.Equal(t, addressesIDsExpected, userTest.AddressesIds(), "Invalid addresses returned from AddressesIDs()")
+	assert.Equal(t, addressesIdsTestUser, userTest.AddressesIds(), "Invalid addresses returned from AddressesIDs()")
 }
 
 func TestAddAddressInUserWithSameAddress(t *testing.T) {
 
-	addressId := addressesIdsTest[0]
+	addressId := addressesIdsTestUser[0]
 	err := userTest.AddAddressId(addressId)
 
 	msgErrorExpected := "AddressId already exists in User: " + userTest.Name()
@@ -65,10 +70,10 @@ func TestAddAddressIDInUserWithoutAddressId(t *testing.T) {
 	addressID := "56789"
 	usr, _ := user.
 		NewBuilder().
-		Id(idTest).
-		Name(nameTest).
-		Email(emailTest).
-		Age(ageTest).
+		Id(idTestUser).
+		Name(nameTestUser).
+		Email(emailTestUser).
+		Age(ageTestUser).
 		Build()
 
 	err := usr.AddAddressId(addressID)

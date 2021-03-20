@@ -8,28 +8,36 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+const idTestAddress string = "ID"
+const streetTestAddress string = "Cool Street"
+const numberTestAddress int = 12356
+const neighborhoodTestAddress string = "Cool Neighborhood"
+const zipcodeTestAddress int = 31298031
+
+const msgErrorInvalidParamAddress string = "Param different from expected when build Address"
+
 var addressTest address.Address
 
 func init() {
 	addressTest, _ = address.
 		NewBuilder().
-		Id(idTest).
-		Street(streetTest).
-		Number(numberTest).
-		Neighborhood(neighborhoodTest).
-		Zipcode(zipcodeTest).
+		Id(idTestAddress).
+		Street(streetTestAddress).
+		Number(numberTestAddress).
+		Neighborhood(neighborhoodTestAddress).
+		Zipcode(zipcodeTestAddress).
 		Build()
 }
 
 func TestGetID(t *testing.T) {
 
-	idExpected := idTest
+	idExpected := idTestAddress
 	assert.Equal(t, addressTest.Id(), idExpected, "Error GetId() return another value")
 }
 
 func TestGetStreet(t *testing.T) {
 
-	streetExpected := streetTest
+	streetExpected := streetTestAddress
 
 	msgError := "Invalid street in GetStreet() test. Actual : " +
 		addressTest.Street() +
@@ -41,7 +49,7 @@ func TestGetStreet(t *testing.T) {
 
 func TestGetNumber(t *testing.T) {
 
-	numberExpected := numberTest
+	numberExpected := numberTestAddress
 
 	msgError := "Invalid number in GetNumber() test. Actual : " +
 		strconv.Itoa(addressTest.Number()) +
@@ -53,7 +61,7 @@ func TestGetNumber(t *testing.T) {
 
 func TestGetNeighborhood(t *testing.T) {
 
-	neighborhoodExpected := neighborhoodTest
+	neighborhoodExpected := neighborhoodTestAddress
 
 	msgError :=
 		"Invalid neighborhood in GetNeighborhood() test. Actual : " +
@@ -66,7 +74,7 @@ func TestGetNeighborhood(t *testing.T) {
 
 func TestGetZipCode(t *testing.T) {
 
-	zipCodeExpected := zipcodeTest
+	zipCodeExpected := zipcodeTestAddress
 
 	msgError := "Invalid number in GetZipCode() test. Actual : " +
 		strconv.Itoa(addressTest.Zipcode()) +
