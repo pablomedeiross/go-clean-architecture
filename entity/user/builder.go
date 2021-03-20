@@ -61,19 +61,20 @@ func (b *builder) AddressesIds(ids []string) Builder {
 // Build return a new User or a error in case of invalid arguments
 func (b *builder) Build() (User, error) {
 
-	err := b.validateRequestParams()
+	var usr User
+	var err error = b.validateRequestParams()
 
-	if err != nil {
-		return nil, err
+	if err == nil {
+		usr = &user{
+			b.id,
+			b.name,
+			b.email,
+			b.age,
+			b.addressesIds,
+		}
 	}
 
-	return &user{
-		b.id,
-		b.name,
-		b.email,
-		b.age,
-		b.addressesIds,
-	}, err
+	return usr, err
 }
 
 func (b builder) validateRequestParams() error {
