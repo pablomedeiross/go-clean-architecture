@@ -11,8 +11,7 @@ type createUserResponse struct {
 	id string
 }
 
-// NewCreateUserReponse is a factory of CreateUserResponse
-func NewCreateUserReponse(id string) (CreateUserResponse, error) {
+func newCreateUserReponse(id string) (CreateUserResponse, error) {
 
 	if len(id) <= 0 {
 		return nil, errors.New("id nil to the create CreateUserResponse")

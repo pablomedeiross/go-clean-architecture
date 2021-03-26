@@ -2,19 +2,20 @@ package usecase
 
 import "errors"
 
+// CreateUserRequest represents a request for user creation
 type CreateUserRequest interface {
-
 	Name() string
 	Email() string
 	Age() int
 }
 
 type createUserRequest struct {
-	name string
+	name  string
 	email string
-	age int
+	age   int
 }
 
+// NewCreateUserRequest is a factory of CreateUserRequest
 func NewCreateUserRequest(name string, email string, age int) (CreateUserRequest, error) {
 
 	var request CreateUserRequest
@@ -22,13 +23,13 @@ func NewCreateUserRequest(name string, email string, age int) (CreateUserRequest
 
 	if len(name) == 0 || len(email) == 0 || age <= 0 {
 		err = errors.New("NewCreateUserRequest called without requested parameter")
-	
+
 	} else {
-		request = createUserRequest {
-			name: name,
+		request = createUserRequest{
+			name:  name,
 			email: email,
-			age: age,
-		} 
+			age:   age,
+		}
 	}
 
 	return request, err
