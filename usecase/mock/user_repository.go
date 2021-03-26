@@ -12,12 +12,12 @@ type userRepositoryMock struct {
 
 func NewUserRepositoryMock(
 	save func(user user.User) (user.User, error),
-	findByName func(name string) user.User) usecase.UserRepository {
+	findByName func(name string) user.User) *usecase.UserRepository {
 
-	return &userRepositoryMock{
-		save,
-		findByName,
-	}
+	var use usecase.UserRepository
+	use = &userRepositoryMock{save, findByName}
+
+	return &use
 }
 
 func (repository *userRepositoryMock) FindByName(name string) user.User {

@@ -36,7 +36,7 @@ func init() {
 
 func TestUserCreationWithSucess(t *testing.T) {
 
-	var repository usecase.UserRepository = mock.NewUserRepositoryMock(
+	var repository *usecase.UserRepository = mock.NewUserRepositoryMock(
 		func(user user.User) (user.User, error) { return userExpected, nil },
 		func(name string) user.User { return nil },
 	)
@@ -50,7 +50,7 @@ func TestUserCreationWithSucess(t *testing.T) {
 
 func TestUserCreationAlreadyCreated(t *testing.T) {
 
-	var repository usecase.UserRepository = mock.NewUserRepositoryMock(
+	var repository *usecase.UserRepository = mock.NewUserRepositoryMock(
 		nil,
 		func(name string) user.User { return userExpected },
 	)
@@ -64,7 +64,7 @@ func TestUserCreationAlreadyCreated(t *testing.T) {
 
 func TestCreateWithRepositoryReturningErrorToTryCreateUser(t *testing.T) {
 
-	var repository usecase.UserRepository = mock.NewUserRepositoryMock(
+	var repository *usecase.UserRepository = mock.NewUserRepositoryMock(
 		func(user user.User) (user.User, error) { return nil, errors.New("Error") },
 		func(name string) user.User { return nil },
 	)
@@ -78,15 +78,15 @@ func TestCreateWithRepositoryReturningErrorToTryCreateUser(t *testing.T) {
 
 func TestCreateWithRepositoryReturningUserWithoutId(t *testing.T) {
 
-	usr, _ := user.
+	usrReturnedFromRepo, _ := user.
 		NewBuilder().
 		Name("name").
 		Email("email").
 		Age(123).
 		Build()
 
-	var repository usecase.UserRepository = mock.NewUserRepositoryMock(
-		func(user user.User) (user.User, error) { return usr, nil },
+	var repository *usecase.UserRepository = mock.NewUserRepositoryMock(
+		func(user user.User) (user.User, error) { return usrReturnedFromRepo, nil },
 		func(name string) user.User { return nil },
 	)
 

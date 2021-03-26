@@ -22,15 +22,19 @@ type createUserInteractor struct {
 	repository *UserRepository
 }
 
-func NewCreateUser(repository UserRepository) (CreateUser, error) {
+// NewcreateUser is factory of CreateUser
+// *UserRepository is a request param if it don't was passed then a error will returned
+func NewCreateUser(repository *UserRepository) (CreateUser, error) {
 
 	if repository == nil {
 		return nil, errors.New(msg_repository_nil)
 	}
 
-	return &createUserInteractor{&repository}, nil
+	return &createUserInteractor{repository}, nil
 }
 
+// CreateUser validate if user of same name exists in the repository
+// case don't exists then user received is created and persisted in repository
 func (interactor *createUserInteractor) Create(request CreateUserRequest) (CreateUserResponse, error) {
 
 	var response CreateUserResponse
@@ -42,7 +46,7 @@ func (interactor *createUserInteractor) Create(request CreateUserRequest) (Creat
 		return nil, errors.New(msg_user_already_exists + request.Name())
 	}
 
-	user := createUserFromRequest(request)
+	user, _ := createUserFromRequest(request)
 	persistedUser, err := (*interactor.repository).Save(user)
 
 	if err != nil {
@@ -58,14 +62,12 @@ func (interactor *createUserInteractor) Create(request CreateUserRequest) (Creat
 	return response, nil
 }
 
-func createUserFromRequest(request CreateUserRequest) user.User {
+func createUserFromRequest(request CreateUserRequest) (user.User, error) {
 
-	usr, _ := user.
+	return user.
 		NewBuilder().
 		Name(request.Name()).
 		Email(request.Email()).
 		Age(request.Age()).
 		Build()
-
-	return usr
 }
