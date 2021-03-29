@@ -2,99 +2,82 @@ package user_test
 
 import (
 	"testing"
-	"errors"
-	"strconv"
 	"user-api/entity/user"
+
 	"github.com/stretchr/testify/assert"
 )
 
-func TestValidationNew(t *testing.T) {
+const idTestUser string = "123"
+const nameTestUser string = "Name"
+const emailTestUser string = "Email@gmail.com"
+const ageTestUser int = 12
 
-	names, emails, ages :=
-		[]string{"", "name2", "name3"},
-		[]string{"test@hotmail.com", "", "test4@live.com"},
-		[]int{10, 11, 0}
+var addressesIdsTestUser []string = []string{"1", "2"}
 
-	for i, _ := range names {
+const msgErrorInvalidParamUser string = "Param different from expected when build User"
+const msgErrorCreateInvalidUser string = "User created without requested params"
 
-		errorExpected := errors.New(
-			"Error creating new User with arguments : " +
-				names[i] + ", " +
-				emails[i] + ", " +
-				strconv.Itoa(ages[i]))
+var userTest user.User
 
-		userTest, errorActual := user.New(names[i], emails[i], ages[i])
-		assert.Nil(t, userTest, "Error, user created withou requested parameters!")
-		assert.Equal(t, errorExpected, errorActual, "Invalid error message !" + errorActual.Error())
-	}
+func init() {
+
+	userTest, _ = user.
+		NewBuilder().
+		Id(idTestUser).
+		Name(nameTestUser).
+		Email(emailTestUser).
+		Age(ageTestUser).
+		AddressesIds(addressesIdsTestUser).
+		Build()
 }
 
-func TestValidationNewPersisted(t *testing.T) {
+func TestGetId(t *testing.T) {
 
-	ids, names, emails, ages, addressesIds :=
-		[]int{1234, 12345678910, 12345678910, 12345678910},
-		[]string{"name2", "", "name3", "name4"},
-		[]string{"test@gmail.com","test@hotmail.com", "", "test4@live.com","test4@bol.com"},
-		[]int{10, 11, 192, 0, 181},
-		[][]string{{"testAddress1"},{"testAddress2"},{"testAddress3"},{"testAddress4"}, nil}
-
-	for i, _ := range names {
-
-		errorExpected := errors.New(
-			"Error creating new User with arguments : " +
-			names[i] + ", " +
-			emails[i] + ", " +
-			strconv.Itoa(ages[i]))
-
-		userTest, errorActual := user.NewPersisted(ids[i], names[i], emails[i], ages[i], addressesIds[i])
-		assert.Nil(t, userTest, "Error, user created withou requested parameters!")
-		assert.Equal(t, errorExpected, errorActual, "Invalid error message !" + errorActual.Error())
-	}
+	assert.Equal(t, idTestUser, userTest.Id(), "Invalid id return from Id()")
 }
 
 func TestGetName(t *testing.T) {
 
-	nameExpected := "NameForTest"
-	userTest, _ := user.New(nameExpected, "email@gmail.com", 10)
-	assert.Equal(t, nameExpected, userTest.Name(), "Invalid name returned from Name()")
+	assert.Equal(t, nameTestUser, userTest.Name(), "Invalid name returned from Name()")
 }
 
 func TestGetEmail(t *testing.T) {
 
-	emailExpected := "email@gmail.com"
-	userTest, _ := user.New("name", emailExpected, 10)
-	assert.Equal(t, emailExpected, userTest.Email(), "Invalid email returned from Email()")
+	assert.Equal(t, emailTestUser, userTest.Email(), "Invalid email returned from Email()")
 }
 
 func TestGetAge(t *testing.T) {
 
-	ageExpected := 20
-	userTest, _ := user.New("name", "email@gmail.com", ageExpected)
-	assert.Equal(t, ageExpected, userTest.Age(), "Invalid age returned from Age()")
+	assert.Equal(t, ageTestUser, userTest.Age(), "Invalid age returned from Age()")
 }
 
 func TestGetAdressesIDs(t *testing.T) {
 
-	addressesIDsExpected := []string{"122445"}
-	userTest, _ := user.NewPersisted(12345678910, "name", "email@gmail.com", 12, addressesIDsExpected)
-	assert.Equal(t, addressesIDsExpected, userTest.AddressesIDs(), "Invalid addresses returned from AddressesIDs()")
+	assert.Equal(t, addressesIdsTestUser, userTest.AddressesIds(), "Invalid addresses returned from AddressesIDs()")
+}
+
+func TestAddAddressInUserWithSameAddress(t *testing.T) {
+
+	addressId := addressesIdsTestUser[0]
+	err := userTest.AddAddressId(addressId)
+
+	msgErrorExpected := "AddressId already exists in User: " + userTest.Name()
+	assert.EqualError(t, err, msgErrorExpected, "Error AddAddress add same address in User")
 }
 
 func TestAddAddressIDInUserWithoutAddressId(t *testing.T) {
 
 	addressID := "56789"
-	userTest, _ := user.New("name", "email@gmail.com", 10)
+	usr, _ := user.
+		NewBuilder().
+		Id(idTestUser).
+		Name(nameTestUser).
+		Email(emailTestUser).
+		Age(ageTestUser).
+		Build()
 
-	err := userTest.AddAddressID(addressID)
-	assert.Nil(t, err)
-}
+	err := usr.AddAddressId(addressID)
 
-func TestAddAddressInUserWithSameAddress(t *testing.T) {
-
-	addressId := "1223"
-	user, _ := user.NewPersisted(12345678910, "name", "email@gmail.com", 10, []string{addressId})
-	err := user.AddAddressID(addressId)
-
-	msgErrorExpected := "AddressId already exists in User: " + "name"
-	assert.EqualError(t, err, msgErrorExpected, "Error AddAddress add same address in User")
+	assert.Equal(t, usr.AddressesIds()[0], addressID, "AddressID is different from expected")
+	assert.Nil(t, err, "Error occurred when Address was instantiated")
 }
