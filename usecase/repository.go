@@ -1,7 +1,6 @@
 package usecase
 
 import (
-	"user-api/entity/address"
 	"user-api/entity/user"
 )
 
@@ -9,9 +8,4 @@ import (
 type UserRepository interface {
 	FindByName(name string) user.User
 	Save(user user.User) (user.User, error)
-}
-
-// AddressRepository is an interface that represents the data persistent for address entities
-type AddressRepository interface {
-	Save(address address.Address) (address.Address, error)
 }

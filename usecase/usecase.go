@@ -4,8 +4,3 @@ package usecase
 type CreateUser interface {
 	Create(request CreateUserRequest) (CreateUserResponse, error)
 }
-
-// AddAddress include a new address for a user
-type AddAddress interface {
-	AddAddress(request AddAddressRequest) error
-}

@@ -6,8 +6,3 @@ type CreateUserRequest interface {
 	Email() string
 	Age() int
 }
-
-// AddAddressRequest represents a request for address inclusion to a user
-type AddAddressRequest interface {
-	Street() string
-}
