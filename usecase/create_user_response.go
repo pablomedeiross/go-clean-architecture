@@ -2,11 +2,6 @@ package usecase
 
 import "errors"
 
-// CreateUserResponse is a response for user creation
-type CreateUserResponse interface {
-	Id() string
-}
-
 type createUserResponse struct {
 	id string
 }
