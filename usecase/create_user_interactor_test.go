@@ -76,7 +76,7 @@ func TestCreateWithRepositoryReturningErrorToTryCreateUser(t *testing.T) {
 	assert.Nil(t, response, "Reponse create even without requested param")
 }
 
-func TestCreateWithRepositoryReturningUserWithoutId(t *testing.T) {
+func TestCreateErrorWhenCreateUserWithRepositoryReturn(t *testing.T) {
 
 	usrReturnedFromRepo, _ := user.
 		NewBuilder().
