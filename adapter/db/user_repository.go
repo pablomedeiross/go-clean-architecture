@@ -1,64 +1,100 @@
 package db
 
 import (
+	"context"
 	"user-api/entity/user"
 	"user-api/usecase"
 
 	"github.com/pkg/errors"
+	"go.mongodb.org/mongo-driver/bson/primitive"
+	"go.mongodb.org/mongo-driver/mongo"
 )
 
 const (
-	dbgateway_return_error_to_save = "DBGateway returned error when tried save user"
-	user_creation_with_error       = "Error when to try create new user from return DbGateway"
-	nil_dbgateway_requested        = "DbGateway requested for create new UserRepository is nil"
+	dbgateway_return_error_to_save      = "DBGateway returned error when tried save user"
+	error_map_entity_to_db              = "Error when try to map entity to db"
+	nil_dbgateway_requested             = "DbGateway requested for create new UserRepository is nil"
+	dbgateway_return_error_to_find_user = "Error to find a user by name in repository"
 )
 
 type userRepository struct {
-	dbGateway DBGateway
+	db NoSQLDB
 }
 
-func NewUserRepository(dbGateway DBGateway) (usecase.UserRepository, error) {
+func NewUserRepository(db *NoSQLDB) (usecase.UserRepository, error) {
 
-	if dbGateway == nil {
+	if db == nil {
 		return nil, errors.New(nil_dbgateway_requested)
 	}
 
-	return &userRepository{dbGateway}, nil
+	return &userRepository{*db}, nil
 }
 
-func (repo *userRepository) FindByName(name string) user.User {
-	return nil
-}
+func (repo *userRepository) FindByName(ctx context.Context, name string) (user.User, error) {
 
-func (repo *userRepository) Save(usr user.User) (user.User, error) {
+	dbUser, err := repo.
+		db.
+		FindUserByName(ctx, name)
 
-	userDb := User{
-		usr.Id(),
-		usr.Name(),
-		usr.Email(),
-		usr.Age(),
-		usr.AddressesIds(),
+	if errors.Is(err, mongo.ErrNoDocuments) {
+		return nil, usecase.NewUserDontExistError(name)
 	}
 
-	userDbReturn, err :=
-		repo.dbGateway.SaveUser(userDb)
+	if err != nil {
+		return nil, errors.Wrap(err, dbgateway_return_error_to_find_user)
+	}
+
+	return dBToEntity(dbUser, dbUser.Id)
+}
+
+func (repo *userRepository) Save(ctx context.Context, usr user.User) (user.User, error) {
+
+	userDb, err := entityToDB(usr)
+
+	if err != nil {
+		return nil, errors.Wrap(err, error_map_entity_to_db)
+	}
+
+	idPersistedUser, err := repo.db.SaveUser(ctx, userDb)
 
 	if err != nil {
 		return nil, errors.Wrap(err, dbgateway_return_error_to_save)
 	}
 
-	userReturn, err := user.
-		NewBuilder().
-		Id(userDbReturn.Id).
-		Name(userDbReturn.Name).
-		Email(userDbReturn.Email).
-		Age(userDbReturn.Age).
-		AddressesIds(userDbReturn.AddressesIds).
-		Build()
+	return dBToEntity(userDb, idPersistedUser)
+}
 
-	if err != nil {
-		return nil, errors.Wrap(err, user_creation_with_error)
+func dBToEntity(db User, id primitive.ObjectID) (user.User, error) {
+
+	return user.
+		NewBuilder().
+		Id(id.Hex()).
+		Name(db.Name).
+		Email(db.Email).
+		Age(db.Age).
+		AddressesIds(db.AddressesIds).
+		Build()
+}
+
+func entityToDB(entity user.User) (User, error) {
+
+	var id primitive.ObjectID = primitive.NilObjectID
+	var err error
+
+	if len(entity.Id()) < 0 {
+		id, err = primitive.ObjectIDFromHex(entity.Id())
 	}
 
-	return userReturn, nil
+	if err != nil {
+		return User{}, errors.Wrap(err, error_map_entity_to_db)
+	}
+
+	return User{
+			id,
+			entity.Name(),
+			entity.Email(),
+			entity.Age(),
+			entity.AddressesIds(),
+		},
+		err
 }

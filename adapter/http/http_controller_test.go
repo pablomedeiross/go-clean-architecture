@@ -1,6 +1,7 @@
 package http_test
 
 import (
+	"context"
 	"errors"
 	"testing"
 	"user-api/adapter/http"
@@ -14,7 +15,8 @@ const idTest = "123"
 
 func TestCreateNewHttpController(t *testing.T) {
 
-	controller, err := http.NewHttpController(double.NewCreateUser(nil))
+	uscase := double.NewCreateUser(nil)
+	controller, err := http.NewHttpController(&uscase)
 
 	assert.NotNil(t, controller)
 	assert.Nil(t, err)
@@ -35,14 +37,16 @@ func TestCreateNewUserWithSucess(t *testing.T) {
 	)
 
 	useCaseDouble := double.NewCreateUser(
-		func(request usecase.CreateUserRequest) (usecase.CreateUserResponse, error) {
+		func(ctx context.Context, request usecase.CreateUserRequest) (usecase.CreateUserResponse, error) {
 			return responseDouble, nil
 		},
 	)
 
-	controller, _ := http.NewHttpController(useCaseDouble)
+	controller, _ := http.NewHttpController(&useCaseDouble)
 
 	idUserCreated, err := controller.CreateUser(
+
+		context.Background(),
 
 		http.User{
 			Name:  "name",
@@ -62,13 +66,13 @@ func TestCreateUserWithRequestParamIsZero(t *testing.T) {
 	)
 
 	useCaseDouble := double.NewCreateUser(
-		func(request usecase.CreateUserRequest) (usecase.CreateUserResponse, error) {
+		func(ctx context.Context, request usecase.CreateUserRequest) (usecase.CreateUserResponse, error) {
 			return responseDouble, nil
 		},
 	)
 
-	controller, _ := http.NewHttpController(useCaseDouble)
-	idUserCreated, err := controller.CreateUser(http.User{})
+	controller, _ := http.NewHttpController(&useCaseDouble)
+	idUserCreated, err := controller.CreateUser(context.Background(), http.User{})
 
 	assert.Empty(t, idUserCreated, idTest)
 	assert.Error(t, err)
@@ -77,13 +81,13 @@ func TestCreateUserWithRequestParamIsZero(t *testing.T) {
 func TestCreateUserWithUseCaseReturningError(t *testing.T) {
 
 	useCaseDouble := double.NewCreateUser(
-		func(request usecase.CreateUserRequest) (usecase.CreateUserResponse, error) {
+		func(ctx context.Context, request usecase.CreateUserRequest) (usecase.CreateUserResponse, error) {
 			return nil, errors.New("Error")
 		},
 	)
 
-	controller, _ := http.NewHttpController(useCaseDouble)
-	idUserCreated, err := controller.CreateUser(http.User{})
+	controller, _ := http.NewHttpController(&useCaseDouble)
+	idUserCreated, err := controller.CreateUser(context.Background(), http.User{})
 
 	assert.Empty(t, idUserCreated, idTest)
 	assert.Error(t, err)

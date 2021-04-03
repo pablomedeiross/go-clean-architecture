@@ -1,17 +1,20 @@
 package double
 
-import "user-api/usecase"
+import (
+	"context"
+	"user-api/usecase"
+)
 
 type createUserDouble struct {
-	createFunc func(request usecase.CreateUserRequest) (usecase.CreateUserResponse, error)
+	createFunc func(ctx context.Context, request usecase.CreateUserRequest) (usecase.CreateUserResponse, error)
 }
 
-func NewCreateUser(create func(request usecase.CreateUserRequest) (usecase.CreateUserResponse, error)) usecase.CreateUser {
+func NewCreateUser(create func(ctx context.Context, request usecase.CreateUserRequest) (usecase.CreateUserResponse, error)) usecase.CreateUser {
 	return &createUserDouble{createFunc: create}
 }
 
-func (create *createUserDouble) Create(request usecase.CreateUserRequest) (usecase.CreateUserResponse, error) {
-	return create.createFunc(request)
+func (create *createUserDouble) Create(ctx context.Context, request usecase.CreateUserRequest) (usecase.CreateUserResponse, error) {
+	return create.createFunc(ctx, request)
 }
 
 type createUserResponse struct {

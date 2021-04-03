@@ -1,13 +1,18 @@
 package db_test
 
 import (
+	"context"
 	"testing"
 	"user-api/adapter/db"
-	"user-api/adapter/db/double"
+	"user-api/adapter/db/test/assertation"
+	"user-api/adapter/db/test/double"
 	"user-api/entity/user"
+	"user-api/usecase"
 
 	"github.com/pkg/errors"
 	"github.com/stretchr/testify/assert"
+	"go.mongodb.org/mongo-driver/bson/primitive"
+	"go.mongodb.org/mongo-driver/mongo"
 )
 
 var expectedUser user.User
@@ -33,11 +38,11 @@ func init() {
 
 func TestNewUserRepository(t *testing.T) {
 
-	dbGatewayDouble := double.NewDBGateway(nil, nil)
+	dbDouble := double.NewNoSQLDB(nil, nil)
 
-	repository, err := db.NewUserRepository(dbGatewayDouble)
+	repository, err := db.NewUserRepository(&dbDouble)
 
-	assert.Nil(t, err)
+	assert.NoError(t, err)
 	assert.NotNil(t, repository)
 }
 
@@ -51,68 +56,79 @@ func TestNewUserRepositoryReturnErrorWithoutDBGateway(t *testing.T) {
 
 func TestSaveUser(t *testing.T) {
 
-	dbGatewayDouble := double.NewDBGateway(
+	dbDouble := double.NewNoSQLDB(
 
-		func(user db.User) (db.User, error) {
-
-			return db.User{
-					expectedUser.Id(),
-					expectedUser.Name(),
-					expectedUser.Email(),
-					expectedUser.Age(),
-					expectedUser.AddressesIds(),
-				},
-
-				nil
+		func(ctx context.Context, user db.User) (primitive.ObjectID, error) {
+			return primitive.NewObjectID(), nil
 		},
 
 		nil,
 	)
 
-	repo, _ := db.NewUserRepository(dbGatewayDouble)
-	user, err := repo.Save(inputUser)
+	repo, _ := db.NewUserRepository(&dbDouble)
+	returnedUser, err := repo.Save(context.Background(), inputUser)
 
-	assert.Nil(t, err)
-	assert.Equal(t, expectedUser, user)
+	assert.NoError(t, err)
+	assert.NotEmpty(t, expectedUser.Id())
+	assertation.UsersEqualWithoutId(t, inputUser, returnedUser)
 }
 
 func TestSaveUserErrorInDbGateway(t *testing.T) {
 
-	dbGatewayDouble := double.NewDBGateway(
+	dbDouble := double.NewNoSQLDB(
 
-		func(user db.User) (db.User, error) {
-			return db.User{}, errors.New("Error")
+		func(ctx context.Context, user db.User) (primitive.ObjectID, error) {
+			return primitive.NilObjectID, errors.New("Error")
 		},
 		nil,
 	)
 
-	repo, _ := db.NewUserRepository(dbGatewayDouble)
-	user, err := repo.Save(inputUser)
+	repo, _ := db.NewUserRepository(&dbDouble)
+	returnedUser, err := repo.Save(context.Background(), inputUser)
 
-	assert.Nil(t, user)
+	assert.Nil(t, returnedUser)
 	assert.Error(t, err)
 }
 
-func TestSaveUserErrorToTheCreateUser(t *testing.T) {
+func TestFindUserByNameReturnUser(t *testing.T) {
 
-	dbGatewayDouble := double.NewDBGateway(
+	primitiveId, _ := primitive.ObjectIDFromHex(expectedUser.Id())
 
-		func(user db.User) (db.User, error) {
-			return db.User{
-					Id:           "id",
-					Name:         "",
-					Email:        "email",
-					Age:          12,
-					AddressesIds: []string{}},
+	expectedUserDB := db.User{
+		Id:    primitiveId,
+		Name:  inputUser.Name(),
+		Email: inputUser.Email(),
+		Age:   inputUser.Age(),
+	}
 
-				nil
-		},
+	dbDouble := double.NewNoSQLDB(
+
 		nil,
+		func(ctx context.Context, name string) (db.User, error) {
+			return expectedUserDB, nil
+		},
 	)
 
-	repo, _ := db.NewUserRepository(dbGatewayDouble)
-	user, err := repo.Save(inputUser)
+	repo, _ := db.NewUserRepository(&dbDouble)
+	returnedUser, err := repo.FindByName(context.Background(), inputUser.Name())
 
-	assert.Nil(t, user)
-	assert.Error(t, err)
+	assert.NoError(t, err)
+	assertation.UserEntityEqualDB(t, returnedUser, expectedUserDB)
+}
+
+func TestFindUserByNameReturnError(t *testing.T) {
+
+	dbDouble := double.NewNoSQLDB(
+
+		nil,
+		func(ctx context.Context, name string) (db.User, error) {
+			return db.User{}, mongo.ErrNoDocuments
+		},
+	)
+
+	repo, _ := db.NewUserRepository(&dbDouble)
+	returnedUser, err := repo.FindByName(context.Background(), inputUser.Name())
+
+	assert.IsType(t, err, usecase.NewUserDontExistError(inputUser.Name()))
+	assert.Empty(t, returnedUser)
 }

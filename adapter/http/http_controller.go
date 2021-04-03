@@ -1,6 +1,7 @@
 package http
 
 import (
+	"context"
 	"user-api/usecase"
 
 	"github.com/pkg/errors"
@@ -13,23 +14,23 @@ const (
 )
 
 type HttpController interface {
-	CreateUser(user User) (string, error)
+	CreateUser(ctx context.Context, user User) (string, error)
 }
 
 type controller struct {
 	createUser usecase.CreateUser
 }
 
-func NewHttpController(createUser usecase.CreateUser) (HttpController, error) {
+func NewHttpController(createUser *usecase.CreateUser) (HttpController, error) {
 
 	if createUser == nil {
 		return nil, errors.New(create_controller_without_param)
 	}
 
-	return &controller{createUser}, nil
+	return &controller{*createUser}, nil
 }
 
-func (controller *controller) CreateUser(user User) (string, error) {
+func (controller *controller) CreateUser(ctx context.Context, user User) (string, error) {
 
 	req, err := usecase.NewCreateUserRequest(user.Name, user.Email, user.Age)
 
@@ -37,7 +38,7 @@ func (controller *controller) CreateUser(user User) (string, error) {
 		return "", errors.Wrap(err, request_param_empty_create_user)
 	}
 
-	resp, err := (controller.createUser).Create(req)
+	resp, err := (controller.createUser).Create(ctx, req)
 
 	if err != nil {
 		return "", errors.Wrap(err, couldnt_create_new_user)
