@@ -6,7 +6,9 @@ import (
 	adapter "user-api/adapter/db"
 	"user-api/external/db"
 	"user-api/external/db/test/assertation"
-	"user-api/external/db/test/helper"
+	"user-api/helper"
+
+	test_helper "user-api/external/db/test/helper"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -63,7 +65,7 @@ func TestFindUserByName(t *testing.T) {
 	err := dbHelper.StartMongoDB()
 	defer dbHelper.StopMongoDB()
 
-	err = dbHelper.InsertUser(userTest)
+	err = test_helper.InsertUser(dbHelper, userTest)
 
 	dbGateway, err := db.NewNoSQLDB(dbHelper.DatabaseURI(), dbHelper.DatabaseName())
 	usr, err := dbGateway.FindUserByName(context.Background(), userTest.Name)
@@ -78,7 +80,7 @@ func TestFindUserByNameWithoutNoneExistentName(t *testing.T) {
 	err := dbHelper.StartMongoDB()
 	defer dbHelper.StopMongoDB()
 
-	err = dbHelper.InsertUser(userTest)
+	err = test_helper.InsertUser(dbHelper, userTest)
 
 	dbGateway, err := db.NewNoSQLDB(dbHelper.DatabaseURI(), dbHelper.DatabaseName())
 	usr, err := dbGateway.FindUserByName(context.Background(), "nonexistent name")

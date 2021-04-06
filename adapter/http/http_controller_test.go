@@ -5,7 +5,7 @@ import (
 	"errors"
 	"testing"
 	"user-api/adapter/http"
-	"user-api/adapter/http/double"
+	"user-api/adapter/http/test"
 	"user-api/usecase"
 
 	"github.com/stretchr/testify/assert"
@@ -15,7 +15,7 @@ const idTest = "123"
 
 func TestCreateNewHttpController(t *testing.T) {
 
-	uscase := double.NewCreateUser(nil)
+	uscase := test.NewCreateUser(nil)
 	controller, err := http.NewHttpController(&uscase)
 
 	assert.NotNil(t, controller)
@@ -32,11 +32,11 @@ func TestErrorWhenCreateNewHttpController(t *testing.T) {
 
 func TestCreateNewUserWithSucess(t *testing.T) {
 
-	responseDouble := double.NewCreateUserResponse(
+	responseDouble := test.NewCreateUserResponse(
 		func() string { return idTest },
 	)
 
-	useCaseDouble := double.NewCreateUser(
+	useCaseDouble := test.NewCreateUser(
 		func(ctx context.Context, request usecase.CreateUserRequest) (usecase.CreateUserResponse, error) {
 			return responseDouble, nil
 		},
@@ -61,11 +61,11 @@ func TestCreateNewUserWithSucess(t *testing.T) {
 
 func TestCreateUserWithRequestParamIsZero(t *testing.T) {
 
-	responseDouble := double.NewCreateUserResponse(
+	responseDouble := test.NewCreateUserResponse(
 		func() string { return idTest },
 	)
 
-	useCaseDouble := double.NewCreateUser(
+	useCaseDouble := test.NewCreateUser(
 		func(ctx context.Context, request usecase.CreateUserRequest) (usecase.CreateUserResponse, error) {
 			return responseDouble, nil
 		},
@@ -80,7 +80,7 @@ func TestCreateUserWithRequestParamIsZero(t *testing.T) {
 
 func TestCreateUserWithUseCaseReturningError(t *testing.T) {
 
-	useCaseDouble := double.NewCreateUser(
+	useCaseDouble := test.NewCreateUser(
 		func(ctx context.Context, request usecase.CreateUserRequest) (usecase.CreateUserResponse, error) {
 			return nil, errors.New("Error")
 		},
