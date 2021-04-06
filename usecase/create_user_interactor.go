@@ -1,6 +1,7 @@
 package usecase
 
 import (
+	"context"
 	"user-api/entity/user"
 
 	"github.com/pkg/errors"
@@ -14,7 +15,7 @@ const (
 )
 
 type createUserInteractor struct {
-	repository *UserRepository
+	repository UserRepository
 }
 
 // NewcreateUser is factory of CreateUser
@@ -25,30 +26,30 @@ func NewCreateUser(repository *UserRepository) (CreateUser, error) {
 		return nil, errors.New(msg_repository_nil)
 	}
 
-	return &createUserInteractor{repository}, nil
+	return &createUserInteractor{*repository}, nil
 }
 
 // CreateUser validate if user of same name exists in the repository
 // case don't exists then user received is created and persisted in repository
-func (interactor *createUserInteractor) Create(request CreateUserRequest) (CreateUserResponse, error) {
+func (interactor *createUserInteractor) Create(ctx context.Context, request CreateUserRequest) (CreateUserResponse, error) {
 
 	var response CreateUserResponse
 	var err error
 
-	existingUser := (*interactor.repository).FindByName(request.Name())
+	existingUser, _ := interactor.repository.FindByName(ctx, request.Name())
 
 	if existingUser != nil {
 		return nil, errors.New(msg_user_already_exists + request.Name())
 	}
 
 	user, _ := createUserFromRequest(request)
-	persistedUser, err := (*interactor.repository).Save(user)
+	userPersisted, err := interactor.repository.Save(ctx, user)
 
 	if err != nil {
 		return nil, errors.Wrap(err, msg_error_create_user+request.Name())
 	}
 
-	response, err = newCreateUserReponse(persistedUser.Id())
+	response, err = newCreateUserReponse(userPersisted.Id())
 
 	if err != nil {
 		return nil, errors.Wrap(err, msg_error_create_response+request.Name())

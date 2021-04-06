@@ -1,6 +1,8 @@
 package usecase
 
+import "context"
+
 // CreateUser is a usecase for creation of new user in application
 type CreateUser interface {
-	Create(request CreateUserRequest) (CreateUserResponse, error)
+	Create(ctx context.Context, request CreateUserRequest) (CreateUserResponse, error)
 }
