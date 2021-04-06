@@ -123,5 +123,5 @@ func registerServices(dbUrl string, dbName string) (*gin.Engine, error) {
 		return nil, errors.Wrap(err, error_create_handler)
 	}
 
-	return http.RegisterHandlers(&handler), nil
+	return http.CreateEngineWithRoutes(&handler), nil
 }

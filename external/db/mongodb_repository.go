@@ -14,11 +14,12 @@ import (
 )
 
 const (
-	mongoDB_error_to_connect     = "Error to connect in database: "
-	mongoDB_error_to_ping        = "Error to ping database after create connection :"
-	mongoDB_error_save_user      = "Error to save user in database"
-	mongoDB_nill_creat_dbgateway = "Database is a requested param to create DBGateway"
-	user_collection_name         = "User"
+	mongoDB_error_to_create_client = "Error to create client for connection with the database: "
+	mongoDB_error_to_connect       = "Error to connect in database: "
+	mongoDB_error_to_ping          = "Error to ping database after create connection :"
+	mongoDB_error_save_user        = "Error to save user in database"
+	mongoDB_nill_creat_dbgateway   = "Database is a requested param to create DBGateway"
+	user_collection_name           = "User"
 )
 
 type mongoDBRepository struct {
@@ -31,6 +32,11 @@ func NewNoSQLDB(urlDatabase string, nameDatabase string) (db.NoSQLDB, error) {
 	defer cancel()
 
 	client, err := mongo.NewClient(options.Client().ApplyURI(urlDatabase + "/" + nameDatabase))
+
+	if err != nil {
+		return nil, errors.Wrap(err, mongoDB_error_to_create_client)
+	}
+
 	err = client.Connect(ctx)
 
 	if err != nil {

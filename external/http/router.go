@@ -4,10 +4,10 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func RegisterHandlers(httpHandler *Handler) *gin.Engine {
+func CreateEngineWithRoutes(httpHandler *Handler) *gin.Engine {
 
-	r := gin.Default()
-	r.POST("/users", httpHandler.Post)
-	return r
-
+	engine := gin.New()
+	engine.Use(gin.Logger())
+	engine.POST("/users", httpHandler.Post)
+	return engine
 }

@@ -32,7 +32,7 @@ func TestCreateUser(t *testing.T) {
 	)
 
 	handler, _ := http.NewHandler(&controller)
-	router := http.RegisterHandlers(&handler)
+	router := http.CreateEngineWithRoutes(&handler)
 
 	responseRecorder := httptest.NewRecorder()
 	req := httptest.NewRequest(
@@ -50,7 +50,7 @@ func TestCreateUserWithReturnBadRequestError(t *testing.T) {
 
 	controller := test.NewUserController(nil)
 	handler, _ := http.NewHandler(&controller)
-	router := http.RegisterHandlers(&handler)
+	router := http.CreateEngineWithRoutes(&handler)
 
 	responseRecorder := httptest.NewRecorder()
 	req := httptest.NewRequest(
@@ -82,7 +82,7 @@ func TestCreateUserWithReturnInternalError(t *testing.T) {
 	)
 
 	handler, _ := http.NewHandler(&controller)
-	router := http.RegisterHandlers(&handler)
+	router := http.CreateEngineWithRoutes(&handler)
 
 	responseRecorder := httptest.NewRecorder()
 	req := httptest.NewRequest(

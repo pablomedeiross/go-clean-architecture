@@ -19,7 +19,7 @@ func AssertThatUserEqualWithouId(t *testing.T, expected db.User, actual db.User)
 }
 
 // To use this function is necessary that a instance of mongoDB be in execution
-func AssertThatUserExistsInDB(t *testing.T, id primitive.ObjectID, dbHelper *helper.DBHelper) {
+func AssertThatUserExistsInDB(t *testing.T, id primitive.ObjectID, dbHelper *helper.InMemoryMongoDB) {
 
 	userReturned, err := test_helper.FindUserById(dbHelper, id)
 
