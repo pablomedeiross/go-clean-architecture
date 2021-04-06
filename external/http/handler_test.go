@@ -43,7 +43,7 @@ func TestCreateUser(t *testing.T) {
 
 	router.ServeHTTP(responseRecorder, req)
 	assert.Equal(t, 201, responseRecorder.Code)
-	assert.Equal(t, "http://example.com/users/"+id_test, responseRecorder.Header().Get("Location"))
+	assert.Equal(t, "http://example.com"+user_path+"/"+id_test, responseRecorder.Header().Get("Location"))
 }
 
 func TestCreateUserWithReturnBadRequestError(t *testing.T) {
@@ -60,7 +60,7 @@ func TestCreateUserWithReturnBadRequestError(t *testing.T) {
 	)
 
 	errorExpected := http.Error{
-		RequestPath:  "/users",
+		RequestPath:  user_path,
 		RequestParms: "",
 		RequestBody:  "{\"name\":\"\",\"email\":\"\",\"age\":0}",
 		ErrorMsg:     "invalid character '/' after object key:value pair",
@@ -92,7 +92,7 @@ func TestCreateUserWithReturnInternalError(t *testing.T) {
 	)
 
 	errorExpected := http.Error{
-		RequestPath:  "/users",
+		RequestPath:  user_path,
 		RequestParms: "",
 		RequestBody:  valid_create_user_request,
 		ErrorMsg:     "Error",
