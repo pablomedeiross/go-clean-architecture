@@ -3,7 +3,7 @@ package helper
 import (
 	"context"
 	"user-api/adapter/db"
-	"user-api/helper"
+	"user-api/external/db/memory"
 
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo/options"
@@ -13,7 +13,7 @@ import (
 const user_collection_name = "User"
 
 // Insert a user in MongoDB
-func InsertUser(helper *helper.InMemoryMongoDB, usr db.User) error {
+func InsertUser(helper *memory.InMemoryMongoDB, usr db.User) error {
 
 	collection, err := helper.ConnectInCollection(user_collection_name)
 	_, err = collection.InsertOne(context.Background(), &usr, options.InsertOne())
@@ -22,7 +22,7 @@ func InsertUser(helper *helper.InMemoryMongoDB, usr db.User) error {
 }
 
 // Search user by name in MongoDB, if don't find return a error
-func FindUserById(helper *helper.InMemoryMongoDB, id primitive.ObjectID) (db.User, error) {
+func FindUserById(helper *memory.InMemoryMongoDB, id primitive.ObjectID) (db.User, error) {
 
 	var userReturned *db.User = &db.User{}
 	collection, err := helper.ConnectInCollection(user_collection_name)

@@ -3,8 +3,8 @@ package assertation
 import (
 	"testing"
 	"user-api/adapter/db"
+	"user-api/external/db/memory"
 	test_helper "user-api/external/db/test/helper"
-	"user-api/helper"
 
 	"github.com/stretchr/testify/assert"
 	"go.mongodb.org/mongo-driver/bson/primitive"
@@ -19,7 +19,7 @@ func AssertThatUserEqualWithouId(t *testing.T, expected db.User, actual db.User)
 }
 
 // To use this function is necessary that a instance of mongoDB be in execution
-func AssertThatUserExistsInDB(t *testing.T, id primitive.ObjectID, dbHelper *helper.InMemoryMongoDB) {
+func AssertThatUserExistsInDB(t *testing.T, id primitive.ObjectID, dbHelper *memory.InMemoryMongoDB) {
 
 	userReturned, err := test_helper.FindUserById(dbHelper, id)
 

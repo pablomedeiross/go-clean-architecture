@@ -5,8 +5,8 @@ import (
 	"testing"
 	adapter "user-api/adapter/db"
 	"user-api/external/db"
+	"user-api/external/db/memory"
 	"user-api/external/db/test/assertation"
-	"user-api/helper"
 
 	test_helper "user-api/external/db/test/helper"
 
@@ -15,13 +15,13 @@ import (
 
 type DBSuite struct {
 	suite.Suite
-	mongoDB     helper.InMemoryMongoDB
+	mongoDB     memory.InMemoryMongoDB
 	userForTest adapter.User
 }
 
 func (suite *DBSuite) SetupSuite() {
 
-	suite.mongoDB = *helper.NewInMemoryMongoDB()
+	suite.mongoDB = *memory.NewInMemoryMongoDB()
 	suite.mongoDB.Start()
 
 	suite.userForTest = adapter.User{

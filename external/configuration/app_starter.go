@@ -3,8 +3,8 @@ package configuration
 import (
 	adapterDB "user-api/adapter/db"
 	adapterHttp "user-api/adapter/http"
+	"user-api/external/db/memory"
 	"user-api/external/http"
-	"user-api/helper"
 
 	"user-api/external/db"
 	"user-api/usecase"
@@ -63,10 +63,10 @@ func NewAppStarter(profile string) (*AppStarter, error) {
 // and configure application services for a local execution
 func configureLocalExecution() (*gin.Engine, error) {
 
-	helper := helper.NewInMemoryMongoDB()
-	helper.Start()
+	memoryDB := memory.NewInMemoryMongoDB()
+	memoryDB.Start()
 
-	return registerServices(helper.URI(), helper.Name())
+	return registerServices(memoryDB.URI(), memoryDB.Name())
 }
 
 // configureProductionExecution start reade properties file for find out mongodb database configurations
