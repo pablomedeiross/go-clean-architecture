@@ -1,10 +1,11 @@
 package usecase_test
 
 import (
+	"context"
 	"testing"
 	"user-api/entity/user"
 	"user-api/usecase"
-	"user-api/usecase/double"
+	"user-api/usecase/test"
 
 	"github.com/pkg/errors"
 	"github.com/stretchr/testify/assert"
@@ -36,42 +37,48 @@ func init() {
 
 func TestUserCreationWithSucess(t *testing.T) {
 
-	var repository *usecase.UserRepository = double.NewUserRepositoryDouble(
-		func(user user.User) (user.User, error) { return userExpected, nil },
-		func(name string) user.User { return nil },
+	var repository *usecase.UserRepository = test.NewUserRepositoryDouble(
+
+		func(ctx context.Context, user user.User) (user.User, error) {
+			return userExpected, nil
+		},
+
+		func(ctx context.Context, name string) (user.User, error) {
+			return nil, usecase.NewUserDontExistError("")
+		},
 	)
 
 	useCase, _ := usecase.NewCreateUser(repository)
 
-	response, err := useCase.Create(request)
+	response, err := useCase.Create(context.Background(), request)
 	assert.Nil(t, err, "Unexpected error to the create user")
 	assert.Equal(t, response.Id(), userExpected.Id(), "Invalid Id from userCreation")
 }
 
 func TestUserCreationAlreadyCreated(t *testing.T) {
 
-	var repository *usecase.UserRepository = double.NewUserRepositoryDouble(
+	var repository *usecase.UserRepository = test.NewUserRepositoryDouble(
 		nil,
-		func(name string) user.User { return userExpected },
+		func(ctx context.Context, name string) (user.User, error) { return userExpected, nil },
 	)
 
 	useCase, _ := usecase.NewCreateUser(repository)
 
-	response, err := useCase.Create(request)
+	response, err := useCase.Create(context.Background(), request)
 	assert.Error(t, err, "User created even that another user have already created")
 	assert.Nil(t, response, "Response created even that another user exist in repository")
 }
 
 func TestCreateWithRepositoryReturningErrorToTryCreateUser(t *testing.T) {
 
-	var repository *usecase.UserRepository = double.NewUserRepositoryDouble(
-		func(user user.User) (user.User, error) { return nil, errors.New("Error") },
-		func(name string) user.User { return nil },
+	var repository *usecase.UserRepository = test.NewUserRepositoryDouble(
+		func(ctx context.Context, user user.User) (user.User, error) { return nil, errors.New("Error") },
+		func(ctx context.Context, name string) (user.User, error) { return nil, nil },
 	)
 
 	useCase, _ := usecase.NewCreateUser(repository)
 
-	response, err := useCase.Create(request)
+	response, err := useCase.Create(context.Background(), request)
 	assert.Error(t, err, "Create method working without requested param")
 	assert.Nil(t, response, "Reponse create even without requested param")
 }
@@ -85,14 +92,14 @@ func TestCreateErrorWhenCreateUserWithRepositoryReturn(t *testing.T) {
 		Age(123).
 		Build()
 
-	var repository *usecase.UserRepository = double.NewUserRepositoryDouble(
-		func(user user.User) (user.User, error) { return usrReturnedFromRepo, nil },
-		func(name string) user.User { return nil },
+	var repository *usecase.UserRepository = test.NewUserRepositoryDouble(
+		func(ctx context.Context, user user.User) (user.User, error) { return usrReturnedFromRepo, nil },
+		func(ctx context.Context, name string) (user.User, error) { return nil, nil },
 	)
 
 	useCase, _ := usecase.NewCreateUser(repository)
 
-	response, err := useCase.Create(request)
+	response, err := useCase.Create(context.Background(), request)
 	assert.Error(t, err, "Repository returning User without id after creation")
 	assert.Nil(t, response, "Reponse create even without requested param Id")
 }
