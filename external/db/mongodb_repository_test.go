@@ -10,78 +10,77 @@ import (
 
 	test_helper "user-api/external/db/test/helper"
 
-	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/suite"
 )
 
-var dbHelper *helper.InMemoryMongoDB
-var userTest adapter.User
+type DBSuite struct {
+	suite.Suite
+	mongoDB     helper.InMemoryMongoDB
+	userForTest adapter.User
+}
 
-func init() {
+func (suite *DBSuite) SetupSuite() {
 
-	dbHelper = helper.NewInMemoryMongoDB()
+	suite.mongoDB = *helper.NewInMemoryMongoDB()
+	suite.mongoDB.Start()
 
-	userTest = adapter.User{
+	suite.userForTest = adapter.User{
 		Name:  "test",
 		Email: "email",
 		Age:   13,
 	}
-
 }
 
-func TestNewDBGateway(t *testing.T) {
-
-	dbHelper.Start()
-	defer dbHelper.Stop()
-
-	dbGateway, err := db.NewNoSQLDB(dbHelper.URI(), dbHelper.Name())
-	assert.NotNil(t, dbGateway)
-	assert.Nil(t, err)
+func (suite *DBSuite) TearDownSuite() {
+	suite.mongoDB.Stop()
 }
 
-func TestNewDBGatewayError(t *testing.T) {
+func (suite *DBSuite) TestNewDBGateway() {
+
+	dbGateway, err := db.NewNoSQLDB(suite.mongoDB.URI(), suite.mongoDB.Name())
+	suite.NotNil(dbGateway)
+	suite.Nil(err)
+}
+
+func (suite *DBSuite) TestNewDBGatewayError() {
 
 	dbGateway, err := db.NewNoSQLDB("", "")
-	assert.Error(t, err)
-	assert.Nil(t, dbGateway)
+	suite.Error(err)
+	suite.Nil(dbGateway)
 }
 
-func TestSaveUser(t *testing.T) {
+func (suite *DBSuite) TestSaveUser() {
 
-	dbHelper.Start()
-	defer dbHelper.Stop()
+	dbGateway, err := db.NewNoSQLDB(suite.mongoDB.URI(), suite.mongoDB.Name())
+	id, err := dbGateway.SaveUser(context.Background(), suite.userForTest)
 
-	dbGateway, err := db.NewNoSQLDB(dbHelper.URI(), dbHelper.Name())
-	id, err := dbGateway.SaveUser(context.Background(), userTest)
-
-	assertation.AssertThatUserExistsInDB(t, id, dbHelper)
-	assert.Nil(t, err)
+	assertation.AssertThatUserExistsInDB(suite.T(), id, &suite.mongoDB)
+	suite.Nil(err)
 }
 
-func TestFindUserByName(t *testing.T) {
+func (suite *DBSuite) TestFindUserByName() {
 
-	err := dbHelper.Start()
-	defer dbHelper.Stop()
+	err := test_helper.InsertUser(&suite.mongoDB, suite.userForTest)
 
-	err = test_helper.InsertUser(dbHelper, userTest)
+	dbGateway, err := db.NewNoSQLDB(suite.mongoDB.URI(), suite.mongoDB.Name())
+	usr, err := dbGateway.FindUserByName(context.Background(), suite.userForTest.Name)
 
-	dbGateway, err := db.NewNoSQLDB(dbHelper.URI(), dbHelper.Name())
-	usr, err := dbGateway.FindUserByName(context.Background(), userTest.Name)
-
-	assert.Nil(t, err)
-	assertation.AssertThatUserExistsInDB(t, usr.Id, dbHelper)
-	assertation.AssertThatUserEqualWithouId(t, userTest, usr)
+	suite.Nil(err)
+	assertation.AssertThatUserExistsInDB(suite.T(), usr.Id, &suite.mongoDB)
+	assertation.AssertThatUserEqualWithouId(suite.T(), suite.userForTest, usr)
 }
 
-func TestFindUserByNameWithoutNoneExistentName(t *testing.T) {
+func (suite *DBSuite) TestFindUserByNameWithoutNoneExistentName() {
 
-	err := dbHelper.Start()
-	defer dbHelper.Stop()
+	err := test_helper.InsertUser(&suite.mongoDB, suite.userForTest)
 
-	err = test_helper.InsertUser(dbHelper, userTest)
-
-	dbGateway, err := db.NewNoSQLDB(dbHelper.URI(), dbHelper.Name())
+	dbGateway, err := db.NewNoSQLDB(suite.mongoDB.URI(), suite.mongoDB.Name())
 	usr, err := dbGateway.FindUserByName(context.Background(), "nonexistent name")
 
-	assert.Error(t, err)
-	assert.Empty(t, usr)
+	suite.Error(err)
+	suite.Empty(usr)
+}
+
+func TestSuite(t *testing.T) {
+	suite.Run(t, new(DBSuite))
 }

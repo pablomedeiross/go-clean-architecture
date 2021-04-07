@@ -23,6 +23,6 @@ func AssertThatUserExistsInDB(t *testing.T, id primitive.ObjectID, dbHelper *hel
 
 	userReturned, err := test_helper.FindUserById(dbHelper, id)
 
-	assert.Empty(t, userReturned, "User don't exists in DB, id: "+id.Hex())
-	assert.Error(t, err)
+	assert.Equal(t, userReturned.Id, id, "User don't exists in DB, id: "+id.Hex())
+	assert.NoError(t, err)
 }
