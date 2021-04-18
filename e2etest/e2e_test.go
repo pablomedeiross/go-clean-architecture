@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"net/http"
 	"testing"
-	"time"
 	"user-api/e2etest/assertation"
 	"user-api/e2etest/dto"
 	"user-api/external/configuration"
@@ -36,7 +35,6 @@ func (suite *E2ESuite) SetupSuite() {
 	starter, _ := configuration.NewAppStarter("local")
 	suite.application = *starter
 	go suite.application.Start()
-	time.Sleep(5000)
 }
 
 func (suite *E2ESuite) TearDownSuite() {
