@@ -3,15 +3,14 @@ package e2etest
 import (
 	"bytes"
 	"encoding/json"
-	"io/ioutil"
 	"net/http"
 	"testing"
 	"time"
+	"user-api/e2etest/assertation"
 	"user-api/e2etest/dto"
 	"user-api/external/configuration"
 	"user-api/external/db/memory"
 
-	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/suite"
 )
 
@@ -20,7 +19,6 @@ const (
 	post          = "POST"
 	user_path     = "/users"
 	content_type  = "application/json"
-	location      = "Location"
 	localhost_uri = "http://localhost:8080"
 )
 
@@ -53,18 +51,15 @@ func (suite *E2ESuite) TestCreateUser() {
 
 	newUser := dto.RequestNewUser{Name: "name1", Email: "email@gmail.com", Age: 12}
 	jsonRequest, _ := json.Marshal(newUser)
-
-	response, err := http.Post(localhost_uri+user_path, content_type, bytes.NewReader(jsonRequest))
-
-	assert.NoError(suite.T(), err)
-	assert.Equal(suite.T(), 201, response.StatusCode)
-	assert.Contains(suite.T(), response.Header.Get(location), localhost_uri+user_path+"/")
+	response, err := sendPostToCreateUser(jsonRequest)
+	assertation.AssertThatUserWasCreated(suite.T(), *response, err)
 }
 
 func (suite *E2ESuite) TestCreateUserThatAlreadyExists() {
 
 	newUser := dto.RequestNewUser{Name: "name2", Email: "email@gmail.com", Age: 12}
 	jsonRequest, _ := json.Marshal(newUser)
+
 	expectedError := dto.Error{
 		RequestPath:  user_path,
 		RequestParms: "",
@@ -74,19 +69,13 @@ func (suite *E2ESuite) TestCreateUserThatAlreadyExists() {
 			newUser.Name,
 	}
 
-	response, err := http.Post(localhost_uri+user_path, content_type, bytes.NewReader(jsonRequest))
-	assert.NoError(suite.T(), err)
-	assert.Equal(suite.T(), 201, response.StatusCode)
-	assert.Contains(suite.T(), response.Header.Get(location), localhost_uri+user_path+"/")
+	response, err := sendPostToCreateUser(jsonRequest)
+	assertation.AssertThatUserWasCreated(suite.T(), *response, err)
 
-	actualError := &dto.Error{}
-	response, err = http.Post(localhost_uri+user_path, content_type, bytes.NewReader(jsonRequest))
-	assert.NoError(suite.T(), err)
+	response, err = sendPostToCreateUser(jsonRequest)
+	assertation.AssertThatUserAlreadyExists(suite.T(), *response, err, expectedError)
+}
 
-	defer response.Body.Close()
-
-	bodyBytes, _ := ioutil.ReadAll(response.Body)
-	json.Unmarshal(bodyBytes, actualError)
-	assert.Equal(suite.T(), expectedError, *actualError)
-
+func sendPostToCreateUser(jsonRequest []byte) (*http.Response, error) {
+	return http.Post(localhost_uri+user_path, content_type, bytes.NewReader(jsonRequest))
 }
