@@ -40,11 +40,16 @@ func createInternalServerErrorResponse(err error, requestBody interface{}, conte
 // createErrorResponse create a new error response in actual gin.Context
 func createErrorResponse(err error, status int, requestBody interface{}, context *gin.Context) {
 
-	json, marshalError := json.Marshal(requestBody)
+	var jsonBody []byte
+	var marshalError error
+
+	if requestBody != nil {
+		jsonBody, marshalError = json.Marshal(requestBody)
+	}
 
 	if marshalError != nil {
 		err = marshalError
-		json = []byte{}
+		jsonBody = []byte{}
 	}
 
 	context.JSON(
@@ -52,7 +57,7 @@ func createErrorResponse(err error, status int, requestBody interface{}, context
 		Error{
 			RequestPath:  context.FullPath(),
 			RequestParms: context.Request.URL.RawQuery,
-			RequestBody:  string(json),
+			RequestBody:  string(jsonBody),
 			ErrorMsg:     err.Error(),
 		},
 	)

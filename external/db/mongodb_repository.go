@@ -14,12 +14,14 @@ import (
 )
 
 const (
-	mongoDB_error_to_create_client = "Error to create client for connection with the database: "
-	mongoDB_error_to_connect       = "Error to connect in database: "
-	mongoDB_error_to_ping          = "Error to ping database after create connection :"
-	mongoDB_error_save_user        = "Error to save user in database"
-	mongoDB_nill_creat_dbgateway   = "Database is a requested param to create DBGateway"
-	user_collection_name           = "User"
+	mongoDB_error_to_create_client      = "Error to create client for connection with the database: "
+	mongoDB_error_to_connect            = "Error to connect in database: "
+	mongoDB_error_to_ping               = "Error to ping database after create connection :"
+	mongoDB_error_save_user             = "Error to save user in database"
+	mongoDB_nill_creat_dbgateway        = "Database is a requested param to create DBGateway"
+	mongoDB_no_user_deleted             = "no exists a user with this name in database to delection"
+	mongoDB_error_database_return_error = "Error to delete user from database in mongoDBRepository"
+	user_collection_name                = "User"
 )
 
 type mongoDBRepository struct {
@@ -79,4 +81,22 @@ func (repository *mongoDBRepository) FindUserByName(ctx context.Context, name st
 		Decode(usr)
 
 	return *usr, err
+}
+
+func (repository *mongoDBRepository) DeleteUser(ctx context.Context, name string) error {
+
+	result, err := repository.
+		db.
+		Collection(user_collection_name).
+		DeleteOne(ctx, bson.M{"name": name}, options.Delete())
+
+	if err != nil {
+		return errors.Wrap(err, mongoDB_error_database_return_error)
+	}
+
+	if result.DeletedCount <= 0 {
+		return errors.New(mongoDB_no_user_deleted)
+	}
+
+	return nil
 }

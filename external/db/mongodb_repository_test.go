@@ -4,12 +4,13 @@ import (
 	"context"
 	"testing"
 	adapter "user-api/adapter/db"
+	memory "user-api/db/inmemory"
 	"user-api/external/db"
-	"user-api/external/db/memory"
-	"user-api/external/db/test/assertation"
+	"user-api/test/assertation"
 
-	test_helper "user-api/external/db/test/helper"
+	"user-api/test/helper"
 
+	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/suite"
 )
 
@@ -35,6 +36,10 @@ func (suite *DBSuite) TearDownSuite() {
 	suite.mongoDB.Stop()
 }
 
+func TestSuite(t *testing.T) {
+	suite.Run(t, new(DBSuite))
+}
+
 func (suite *DBSuite) TestNewDBGateway() {
 
 	dbGateway, err := db.NewNoSQLDB(suite.mongoDB.URI(), suite.mongoDB.Name())
@@ -52,6 +57,8 @@ func (suite *DBSuite) TestNewDBGatewayError() {
 func (suite *DBSuite) TestSaveUser() {
 
 	dbGateway, err := db.NewNoSQLDB(suite.mongoDB.URI(), suite.mongoDB.Name())
+	assert.NoError(suite.T(), err)
+
 	id, err := dbGateway.SaveUser(context.Background(), suite.userForTest)
 
 	assertation.AssertThatUserExistsInDB(suite.T(), id, &suite.mongoDB)
@@ -60,9 +67,12 @@ func (suite *DBSuite) TestSaveUser() {
 
 func (suite *DBSuite) TestFindUserByName() {
 
-	err := test_helper.InsertUser(&suite.mongoDB, suite.userForTest)
+	err := helper.InsertUser(&suite.mongoDB, suite.userForTest)
+	assert.NoError(suite.T(), err)
 
 	dbGateway, err := db.NewNoSQLDB(suite.mongoDB.URI(), suite.mongoDB.Name())
+	assert.NoError(suite.T(), err)
+
 	usr, err := dbGateway.FindUserByName(context.Background(), suite.userForTest.Name)
 
 	suite.Nil(err)
@@ -72,15 +82,38 @@ func (suite *DBSuite) TestFindUserByName() {
 
 func (suite *DBSuite) TestFindUserByNameWithoutNoneExistentName() {
 
-	err := test_helper.InsertUser(&suite.mongoDB, suite.userForTest)
+	err := helper.InsertUser(&suite.mongoDB, suite.userForTest)
+	assert.NoError(suite.T(), err)
 
 	dbGateway, err := db.NewNoSQLDB(suite.mongoDB.URI(), suite.mongoDB.Name())
+	assert.NoError(suite.T(), err)
+
 	usr, err := dbGateway.FindUserByName(context.Background(), "nonexistent name")
 
 	suite.Error(err)
 	suite.Empty(usr)
 }
 
-func TestSuite(t *testing.T) {
-	suite.Run(t, new(DBSuite))
+func (suite *DBSuite) TestDeleteUser() {
+
+	err := helper.InsertUser(&suite.mongoDB, suite.userForTest)
+	assert.NoError(suite.T(), err)
+
+	dbGateway, err := db.NewNoSQLDB(suite.mongoDB.URI(), suite.mongoDB.Name())
+	assert.NoError(suite.T(), err)
+
+	err = dbGateway.DeleteUser(context.Background(), suite.userForTest.Name)
+
+	suite.Nil(err)
+	assertation.AssertThatUserDontExistsInDB(suite.T(), suite.userForTest.Name, &suite.mongoDB)
+}
+
+func (suite *DBSuite) TestDeleteDontExistentUser() {
+
+	dbGateway, err := db.NewNoSQLDB(suite.mongoDB.URI(), suite.mongoDB.Name())
+	assert.NoError(suite.T(), err)
+
+	err = dbGateway.DeleteUser(context.Background(), suite.userForTest.Name)
+
+	suite.Error(err)
 }

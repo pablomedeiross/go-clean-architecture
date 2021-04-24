@@ -10,6 +10,7 @@ import (
 type UserRepository interface {
 	FindByName(ctx context.Context, name string) (user.User, error)
 	Save(ctx context.Context, user user.User) (user.User, error)
+	Delete(ctx context.Context, name string) error
 }
 
 type UserDontExist error

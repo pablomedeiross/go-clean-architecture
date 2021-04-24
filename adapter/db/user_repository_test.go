@@ -4,9 +4,9 @@ import (
 	"context"
 	"testing"
 	"user-api/adapter/db"
-	"user-api/adapter/db/test/assertation"
-	"user-api/adapter/db/test/double"
 	"user-api/entity/user"
+	"user-api/test/assertation"
+	"user-api/test/double"
 	"user-api/usecase"
 
 	"github.com/pkg/errors"
@@ -38,7 +38,7 @@ func init() {
 
 func TestNewUserRepository(t *testing.T) {
 
-	dbDouble := double.NewNoSQLDB(nil, nil)
+	dbDouble := double.NewNoSQLDB(nil, nil, nil)
 
 	repository, err := db.NewUserRepository(&dbDouble)
 
@@ -61,7 +61,7 @@ func TestSaveUser(t *testing.T) {
 		func(ctx context.Context, user db.User) (primitive.ObjectID, error) {
 			return primitive.NewObjectID(), nil
 		},
-
+		nil,
 		nil,
 	)
 
@@ -80,6 +80,7 @@ func TestSaveUserErrorInDbGateway(t *testing.T) {
 		func(ctx context.Context, user db.User) (primitive.ObjectID, error) {
 			return primitive.NilObjectID, errors.New("Error")
 		},
+		nil,
 		nil,
 	)
 
@@ -107,6 +108,7 @@ func TestFindUserByNameReturnUser(t *testing.T) {
 		func(ctx context.Context, name string) (db.User, error) {
 			return expectedUserDB, nil
 		},
+		nil,
 	)
 
 	repo, _ := db.NewUserRepository(&dbDouble)
@@ -124,6 +126,7 @@ func TestFindUserByNameReturnError(t *testing.T) {
 		func(ctx context.Context, name string) (db.User, error) {
 			return db.User{}, mongo.ErrNoDocuments
 		},
+		nil,
 	)
 
 	repo, _ := db.NewUserRepository(&dbDouble)
@@ -131,4 +134,38 @@ func TestFindUserByNameReturnError(t *testing.T) {
 
 	assert.IsType(t, err, usecase.NewUserDontExistError(inputUser.Name()))
 	assert.Empty(t, returnedUser)
+}
+
+func TestDeleteUser(t *testing.T) {
+
+	dbDouble := double.NewNoSQLDB(
+
+		nil,
+		func(ctx context.Context, name string) (db.User, error) {
+			return db.User{}, mongo.ErrNoDocuments
+		},
+		func(ctx context.Context, nam string) error { return nil },
+	)
+
+	repo, _ := db.NewUserRepository(&dbDouble)
+	err := repo.Delete(context.Background(), inputUser.Name())
+
+	assert.NoError(t, err)
+}
+
+func TestGatewayReturningErrorToTryDeleteUser(t *testing.T) {
+
+	dbDouble := double.NewNoSQLDB(
+
+		nil,
+		func(ctx context.Context, name string) (db.User, error) {
+			return db.User{}, mongo.ErrNoDocuments
+		},
+		func(ctx context.Context, nam string) error { return errors.New("Error") },
+	)
+
+	repo, _ := db.NewUserRepository(&dbDouble)
+	err := repo.Delete(context.Background(), inputUser.Name())
+
+	assert.Error(t, err)
 }

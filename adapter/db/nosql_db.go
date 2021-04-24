@@ -9,4 +9,5 @@ import (
 type NoSQLDB interface {
 	SaveUser(ctx context.Context, user User) (primitive.ObjectID, error)
 	FindUserByName(ctx context.Context, name string) (User, error)
+	DeleteUser(ctx context.Context, nam string) error
 }
