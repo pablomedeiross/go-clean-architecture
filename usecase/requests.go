@@ -6,3 +6,8 @@ type CreateUserRequest interface {
 	Email() string
 	Age() int
 }
+
+//RemoveUserRequest represents a request for user deletion
+type RemoveUserRequest interface {
+	Name() string
+}

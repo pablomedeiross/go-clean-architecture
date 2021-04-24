@@ -11,10 +11,11 @@ import (
 )
 
 const (
-	dbgateway_return_error_to_save      = "DBGateway returned error when tried save user"
-	error_map_entity_to_db              = "Error when try to map entity to db"
-	nil_dbgateway_requested             = "DbGateway requested for create new UserRepository is nil"
-	dbgateway_return_error_to_find_user = "Error to find a user by name in repository"
+	dbgateway_return_error_to_save        = "DBGateway returned error when tried save user"
+	error_map_entity_to_db                = "Error when try to map entity to db"
+	nil_dbgateway_requested               = "DbGateway requested for create new UserRepository is nil"
+	dbgateway_return_error_to_find_user   = "Error to find a user by name in repository"
+	dbgateway_return_error_to_delete_user = "Error to delete user in repository"
 )
 
 type userRepository struct {
@@ -62,6 +63,17 @@ func (repo *userRepository) Save(ctx context.Context, usr user.User) (user.User,
 	}
 
 	return dBToEntity(userDb, idPersistedUser)
+}
+
+func (repo *userRepository) Delete(ctx context.Context, name string) error {
+
+	err := repo.db.DeleteUser(ctx, name)
+
+	if err != nil {
+		return errors.Wrap(err, dbgateway_return_error_to_delete_user)
+	}
+
+	return nil
 }
 
 func dBToEntity(db User, id primitive.ObjectID) (user.User, error) {

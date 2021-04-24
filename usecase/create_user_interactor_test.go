@@ -4,8 +4,8 @@ import (
 	"context"
 	"testing"
 	"user-api/entity/user"
+	"user-api/test/double"
 	"user-api/usecase"
-	"user-api/usecase/test"
 
 	"github.com/pkg/errors"
 	"github.com/stretchr/testify/assert"
@@ -37,7 +37,7 @@ func init() {
 
 func TestUserCreationWithSucess(t *testing.T) {
 
-	var repository *usecase.UserRepository = test.NewUserRepositoryDouble(
+	var repository *usecase.UserRepository = double.NewUserRepositoryDouble(
 
 		func(ctx context.Context, user user.User) (user.User, error) {
 			return userExpected, nil
@@ -46,6 +46,7 @@ func TestUserCreationWithSucess(t *testing.T) {
 		func(ctx context.Context, name string) (user.User, error) {
 			return nil, usecase.NewUserDontExistError("")
 		},
+		nil,
 	)
 
 	useCase, _ := usecase.NewCreateUser(repository)
@@ -57,9 +58,10 @@ func TestUserCreationWithSucess(t *testing.T) {
 
 func TestUserCreationAlreadyCreated(t *testing.T) {
 
-	var repository *usecase.UserRepository = test.NewUserRepositoryDouble(
+	var repository *usecase.UserRepository = double.NewUserRepositoryDouble(
 		nil,
 		func(ctx context.Context, name string) (user.User, error) { return userExpected, nil },
+		nil,
 	)
 
 	useCase, _ := usecase.NewCreateUser(repository)
@@ -71,9 +73,10 @@ func TestUserCreationAlreadyCreated(t *testing.T) {
 
 func TestCreateWithRepositoryReturningErrorToTryCreateUser(t *testing.T) {
 
-	var repository *usecase.UserRepository = test.NewUserRepositoryDouble(
+	var repository *usecase.UserRepository = double.NewUserRepositoryDouble(
 		func(ctx context.Context, user user.User) (user.User, error) { return nil, errors.New("Error") },
 		func(ctx context.Context, name string) (user.User, error) { return nil, nil },
+		nil,
 	)
 
 	useCase, _ := usecase.NewCreateUser(repository)
@@ -92,9 +95,10 @@ func TestCreateErrorWhenCreateUserWithRepositoryReturn(t *testing.T) {
 		Age(123).
 		Build()
 
-	var repository *usecase.UserRepository = test.NewUserRepositoryDouble(
+	var repository *usecase.UserRepository = double.NewUserRepositoryDouble(
 		func(ctx context.Context, user user.User) (user.User, error) { return usrReturnedFromRepo, nil },
 		func(ctx context.Context, name string) (user.User, error) { return nil, nil },
+		nil,
 	)
 
 	useCase, _ := usecase.NewCreateUser(repository)

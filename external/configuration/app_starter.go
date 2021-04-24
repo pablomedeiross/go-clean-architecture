@@ -3,7 +3,7 @@ package configuration
 import (
 	adapterDB "user-api/adapter/db"
 	adapterHttp "user-api/adapter/http"
-	"user-api/external/db/memory"
+	"user-api/db/inmemory"
 	"user-api/external/http"
 
 	"user-api/external/db"
@@ -23,6 +23,7 @@ const (
 	error_create_nosql_db        = error_register_prefix + "NOSQLDB" + error_register_sufix
 	error_create_user_repository = error_register_prefix + "UserRepository" + error_register_sufix
 	error_create_createuser      = error_register_prefix + "usecase CreateUser" + error_register_sufix
+	error_create_removeuser      = error_register_prefix + "usecase RemoveUser" + error_register_sufix
 	error_create_controller      = error_register_prefix + "Controller" + error_register_sufix
 	error_create_handler         = error_register_prefix + "Handler" + error_register_sufix
 	error_to_read_configuration  = "Error to read configuration file"
@@ -63,7 +64,7 @@ func NewAppStarter(profile string) (*AppStarter, error) {
 // and configure application services for a local execution
 func configureLocalExecution() (*gin.Engine, error) {
 
-	memoryDB := memory.NewInMemoryMongoDB()
+	memoryDB := inmemory.NewInMemoryMongoDB()
 	memoryDB.Start()
 
 	return registerServices(memoryDB.URI(), memoryDB.Name())
@@ -105,13 +106,19 @@ func registerServices(dbUrl string, dbName string) (*gin.Engine, error) {
 		return nil, errors.Wrap(err, error_create_user_repository)
 	}
 
-	usecase, err := usecase.NewCreateUser(&userRepository)
+	createUserUsecase, err := usecase.NewCreateUser(&userRepository)
 
 	if err != nil {
 		return nil, errors.Wrap(err, error_create_createuser)
 	}
 
-	controller, err := adapterHttp.NewHttpController(&usecase)
+	removeUsecase, err := usecase.NewRemoveUser(userRepository)
+
+	if err != nil {
+		return nil, errors.Wrap(err, error_create_removeuser)
+	}
+
+	controller, err := adapterHttp.NewHttpController(&createUserUsecase, &removeUsecase)
 
 	if err != nil {
 		return nil, errors.Wrap(err, error_create_controller)

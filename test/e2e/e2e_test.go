@@ -1,15 +1,16 @@
-package e2etest
+package e2e_test
 
 import (
 	"bytes"
 	"encoding/json"
 	"net/http"
 	"testing"
-	"user-api/e2etest/assertation"
-	"user-api/e2etest/dto"
+	"user-api/db/inmemory"
 	"user-api/external/configuration"
-	"user-api/external/db/memory"
+	"user-api/test/e2e/assertation"
+	"user-api/test/e2e/dto"
 
+	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/suite"
 )
 
@@ -23,13 +24,13 @@ const (
 
 type E2ESuite struct {
 	suite.Suite
-	mongoDB     memory.InMemoryMongoDB
+	mongoDB     inmemory.InMemoryMongoDB
 	application configuration.AppStarter
 }
 
 func (suite *E2ESuite) SetupSuite() {
 
-	suite.mongoDB = *memory.NewInMemoryMongoDB()
+	suite.mongoDB = *inmemory.NewInMemoryMongoDB()
 	suite.mongoDB.Start()
 
 	starter, _ := configuration.NewAppStarter("local")
@@ -55,7 +56,7 @@ func (suite *E2ESuite) TestCreateUser() {
 
 func (suite *E2ESuite) TestCreateUserThatAlreadyExists() {
 
-	newUser := dto.RequestNewUser{Name: "name2", Email: "email@gmail.com", Age: 12}
+	newUser := dto.RequestNewUser{Name: "name2", Email: "email@uol.com", Age: 12}
 	jsonRequest, _ := json.Marshal(newUser)
 
 	expectedError := dto.Error{
@@ -72,6 +73,23 @@ func (suite *E2ESuite) TestCreateUserThatAlreadyExists() {
 
 	response, err = sendPostToCreateUser(jsonRequest)
 	assertation.AssertThatUserAlreadyExists(suite.T(), *response, err, expectedError)
+}
+
+func (suite *E2ESuite) TestDeleteUser() {
+
+	newUser := dto.RequestNewUser{Name: "name4", Email: "email@hotmail.com", Age: 12}
+	jsonRequest, _ := json.Marshal(newUser)
+	response, err := sendPostToCreateUser(jsonRequest)
+
+	assertation.AssertThatUserWasCreated(suite.T(), *response, err)
+
+	request, _ := http.NewRequest(http.MethodDelete, localhost_uri+user_path+"/"+newUser.Name, nil)
+	client := &http.Client{}
+	response, err = client.Do(request)
+
+	assert.NoError(suite.T(), err)
+	assert.Equal(suite.T(), 204, response.StatusCode)
+	assertation.AssertThatUserDontExistsInDB(suite.T(), newUser.Name, &suite.mongoDB)
 }
 
 func sendPostToCreateUser(jsonRequest []byte) (*http.Response, error) {

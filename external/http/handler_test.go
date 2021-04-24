@@ -9,26 +9,30 @@ import (
 	"testing"
 	adapter "user-api/adapter/http"
 	"user-api/external/http"
-	"user-api/external/http/test"
+	"user-api/test/double"
 
 	"github.com/stretchr/testify/assert"
 )
 
-const id_test = "Id"
-const post = "POST"
-const user_path = "/users"
-const valid_create_user_request = "{" +
-	"\"name\":\"exa\"," +
-	"\"email\":\"meila\"," +
-	"\"age\":12" +
-	"}"
+const (
+	id_test                   = "Id"
+	post                      = "POST"
+	delete                    = "DELETE"
+	user_path                 = "/users"
+	valid_create_user_request = "{" +
+		"\"name\":\"exa\"," +
+		"\"email\":\"meila\"," +
+		"\"age\":12" +
+		"}"
+)
 
 func TestCreateUser(t *testing.T) {
 
-	controller := test.NewUserController(
+	controller := double.NewUserController(
 		func(ctx context.Context, user adapter.User) (string, error) {
 			return id_test, nil
 		},
+		nil,
 	)
 
 	handler, _ := http.NewHandler(&controller)
@@ -48,7 +52,7 @@ func TestCreateUser(t *testing.T) {
 
 func TestCreateUserWithReturnBadRequestError(t *testing.T) {
 
-	controller := test.NewUserController(nil)
+	controller := double.NewUserController(nil, nil)
 	handler, _ := http.NewHandler(&controller)
 	router := http.CreateEngineWithRoutes(&handler)
 
@@ -75,10 +79,11 @@ func TestCreateUserWithReturnBadRequestError(t *testing.T) {
 
 func TestCreateUserWithReturnInternalError(t *testing.T) {
 
-	controller := test.NewUserController(
+	controller := double.NewUserController(
 		func(ctx context.Context, user adapter.User) (string, error) {
 			return "", errors.New("Error")
 		},
+		nil,
 	)
 
 	handler, _ := http.NewHandler(&controller)
@@ -95,6 +100,58 @@ func TestCreateUserWithReturnInternalError(t *testing.T) {
 		RequestPath:  user_path,
 		RequestParms: "",
 		RequestBody:  valid_create_user_request,
+		ErrorMsg:     "Error",
+	}
+
+	errorBytes, _ := json.Marshal(errorExpected)
+
+	router.ServeHTTP(responseRecorder, req)
+	assert.Equal(t, 500, responseRecorder.Code)
+	assert.Equal(t, string(errorBytes), responseRecorder.Body.String())
+}
+
+func TestDeleteUser(t *testing.T) {
+
+	controller := double.NewUserController(
+		nil,
+		func(ctx context.Context, name string) error { return nil },
+	)
+
+	handler, _ := http.NewHandler(&controller)
+	router := http.CreateEngineWithRoutes(&handler)
+
+	responseRecorder := httptest.NewRecorder()
+	req := httptest.NewRequest(
+		delete,
+		user_path+"/"+id_test,
+		nil,
+	)
+
+	router.ServeHTTP(responseRecorder, req)
+	assert.Equal(t, 204, responseRecorder.Code)
+}
+
+func TestDeleteUserWithInternalServerError(t *testing.T) {
+
+	controller := double.NewUserController(
+		nil,
+		func(ctx context.Context, name string) error { return errors.New("Error") },
+	)
+
+	handler, _ := http.NewHandler(&controller)
+	router := http.CreateEngineWithRoutes(&handler)
+
+	responseRecorder := httptest.NewRecorder()
+	req := httptest.NewRequest(
+		delete,
+		user_path+"/"+id_test,
+		nil,
+	)
+
+	errorExpected := http.Error{
+		RequestPath:  user_path + "/:id",
+		RequestParms: "",
+		RequestBody:  "",
 		ErrorMsg:     "Error",
 	}
 

@@ -46,3 +46,18 @@ func (handler *Handler) Post(context *gin.Context) {
 
 	addLocationHeader(id, context)
 }
+
+func (handler *Handler) Delete(ctx *gin.Context) {
+
+	param := ctx.Param("id")
+
+	err := handler.
+		controller.
+		RemoveUser(ctx, param)
+
+	if err != nil {
+		createInternalServerErrorResponse(err, nil, ctx)
+	}
+
+	ctx.Status(204)
+}

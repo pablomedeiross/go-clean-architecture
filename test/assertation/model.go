@@ -8,6 +8,12 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+const (
+	location      = "Location"
+	user_path     = "/users"
+	localhost_uri = "http://localhost:8080"
+)
+
 func UserEntityEqualDB(t *testing.T, entity user.User, db db.User) {
 
 	assert.Equal(t, entity.Id(), db.Id.Hex())
@@ -28,4 +34,12 @@ func UserEntityEqualDBWithoutId(t *testing.T, entity user.User, db db.User) {
 	assert.Equal(t, entity.Email(), db.Email)
 	assert.Equal(t, entity.Age(), db.Age)
 	assert.Equal(t, entity.AddressesIds(), db.AddressesIds)
+}
+
+func AssertThatUserEqualWithouId(t *testing.T, expected db.User, actual db.User) {
+
+	assert.Equal(t, expected.Name, actual.Name)
+	assert.Equal(t, expected.Email, actual.Email)
+	assert.Equal(t, expected.Age, actual.Age)
+	assert.Equal(t, expected.AddressesIds, actual.AddressesIds)
 }

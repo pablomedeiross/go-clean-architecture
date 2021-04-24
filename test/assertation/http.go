@@ -5,15 +5,9 @@ import (
 	"io/ioutil"
 	"net/http"
 	"testing"
-	"user-api/e2etest/dto"
+	"user-api/test/e2e/dto"
 
 	"github.com/stretchr/testify/assert"
-)
-
-const (
-	location      = "Location"
-	user_path     = "/users"
-	localhost_uri = "http://localhost:8080"
 )
 
 func AssertThatUserWasCreated(t *testing.T, response http.Response, err error) {
