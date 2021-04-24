@@ -56,7 +56,7 @@ func (suite *E2ESuite) TestCreateUser() {
 
 func (suite *E2ESuite) TestCreateUserThatAlreadyExists() {
 
-	newUser := dto.RequestNewUser{Name: "name2", Email: "email@gmail.com", Age: 12}
+	newUser := dto.RequestNewUser{Name: "name2", Email: "email@uol.com", Age: 12}
 	jsonRequest, _ := json.Marshal(newUser)
 
 	expectedError := dto.Error{
@@ -77,7 +77,7 @@ func (suite *E2ESuite) TestCreateUserThatAlreadyExists() {
 
 func (suite *E2ESuite) TestDeleteUser() {
 
-	newUser := dto.RequestNewUser{Name: "name4", Email: "email@gmail.com", Age: 12}
+	newUser := dto.RequestNewUser{Name: "name4", Email: "email@hotmail.com", Age: 12}
 	jsonRequest, _ := json.Marshal(newUser)
 	response, err := sendPostToCreateUser(jsonRequest)
 
