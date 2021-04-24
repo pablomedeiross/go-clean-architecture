@@ -61,7 +61,7 @@ func (suite *DBSuite) TestSaveUser() {
 
 	id, err := dbGateway.SaveUser(context.Background(), suite.userForTest)
 
-	assertation.AssertThatUserExistsInDB(suite.T(), id, &suite.mongoDB)
+	assertation.AssertThatUserExistsInDB(suite.T(), id.Hex(), &suite.mongoDB)
 	suite.Nil(err)
 }
 
@@ -76,7 +76,7 @@ func (suite *DBSuite) TestFindUserByName() {
 	usr, err := dbGateway.FindUserByName(context.Background(), suite.userForTest.Name)
 
 	suite.Nil(err)
-	assertation.AssertThatUserExistsInDB(suite.T(), usr.Id, &suite.mongoDB)
+	assertation.AssertThatUserExistsInDB(suite.T(), usr.Id.Hex(), &suite.mongoDB)
 	assertation.AssertThatUserEqualWithouId(suite.T(), suite.userForTest, usr)
 }
 

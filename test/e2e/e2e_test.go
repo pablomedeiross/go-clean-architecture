@@ -51,7 +51,7 @@ func (suite *E2ESuite) TestCreateUser() {
 	newUser := dto.RequestNewUser{Name: "name1", Email: "email@gmail.com", Age: 12}
 	jsonRequest, _ := json.Marshal(newUser)
 	response, err := sendPostToCreateUser(jsonRequest)
-	assertation.AssertThatUserWasCreated(suite.T(), *response, err)
+	assertation.AssertHttpPostWasRealized(suite.T(), *response, err)
 }
 
 func (suite *E2ESuite) TestCreateUserThatAlreadyExists() {
@@ -69,7 +69,7 @@ func (suite *E2ESuite) TestCreateUserThatAlreadyExists() {
 	}
 
 	response, err := sendPostToCreateUser(jsonRequest)
-	assertation.AssertThatUserWasCreated(suite.T(), *response, err)
+	assertation.AssertHttpPostWasRealized(suite.T(), *response, err)
 
 	response, err = sendPostToCreateUser(jsonRequest)
 	assertation.AssertHttpErrorEqual(suite.T(), *response, err, expectedError)
@@ -81,7 +81,7 @@ func (suite *E2ESuite) TestDeleteUser() {
 	jsonRequest, _ := json.Marshal(newUser)
 	response, err := sendPostToCreateUser(jsonRequest)
 
-	assertation.AssertThatUserWasCreated(suite.T(), *response, err)
+	assertation.AssertHttpPostWasRealized(suite.T(), *response, err)
 
 	request, _ := sendDeleteUser(newUser.Name)
 	client := &http.Client{}

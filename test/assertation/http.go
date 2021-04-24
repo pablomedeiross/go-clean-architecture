@@ -10,7 +10,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func AssertThatUserWasCreated(t *testing.T, response http.Response, err error) {
+func AssertHttpPostWasRealized(t *testing.T, response http.Response, err error) {
 
 	assert.NoError(t, err)
 	assert.Equal(t, 201, response.StatusCode)

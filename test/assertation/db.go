@@ -10,11 +10,12 @@ import (
 )
 
 // To use this function is necessary that a instance of mongoDB be in execution
-func AssertThatUserExistsInDB(t *testing.T, id primitive.ObjectID, dbHelper *inmemory.InMemoryMongoDB) {
+func AssertThatUserExistsInDB(t *testing.T, id string, dbHelper *inmemory.InMemoryMongoDB) {
 
-	userReturned, err := helper.FindUserById(dbHelper, id)
+	primitiveId, _ := primitive.ObjectIDFromHex(id)
+	userReturned, err := helper.FindUserById(dbHelper, primitiveId)
 
-	assert.Equal(t, userReturned.Id, id, "User don't exists in DB, id: "+id.Hex())
+	assert.Equal(t, userReturned.Id.Hex(), id, "User don't exists in DB, id: "+id)
 	assert.NoError(t, err)
 }
 
