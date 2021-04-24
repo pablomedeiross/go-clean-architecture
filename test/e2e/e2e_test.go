@@ -83,7 +83,7 @@ func (suite *E2ESuite) TestDeleteUser() {
 
 	assertation.AssertThatUserWasCreated(suite.T(), *response, err)
 
-	request, _ := http.NewRequest(http.MethodDelete, localhost_uri+user_path+"/"+newUser.Name, nil)
+	request, _ := sendDeleteUser(newUser.Name)
 	client := &http.Client{}
 	response, err = client.Do(request)
 
@@ -104,11 +104,15 @@ func (suite *E2ESuite) TestDeleteNoExistentUser() {
 			"no exists a user with this name in database to delection",
 	}
 
-	request, _ := http.NewRequest(http.MethodDelete, localhost_uri+user_path+"/"+"noexistentuser", nil)
+	request, _ := sendDeleteUser("noexistentuser")
 	client := &http.Client{}
 	response, err := client.Do(request)
 
 	assertation.AssertHttpErrorEqual(suite.T(), *response, err, expectedError)
+}
+
+func sendDeleteUser(name string) (*http.Request, error) {
+	return http.NewRequest(http.MethodDelete, localhost_uri+user_path+"/"+name, nil)
 }
 
 func sendPostToCreateUser(jsonRequest []byte) (*http.Response, error) {
