@@ -1,6 +1,13 @@
 package usecase
 
-import "context"
+import (
+	"context"
+)
+
+// SearchUser is a usecase for users research in application
+type SearchUser interface {
+	Search(ctx context.Context, request PagedUserRequest) (PagedUserResponse, error)
+}
 
 // CreateUser is a usecase for creation of new user in application
 type CreateUser interface {
