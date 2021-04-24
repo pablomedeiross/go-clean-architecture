@@ -50,7 +50,7 @@ git clone https://github.com/pablomedeiross/go-clean-architecture.git
 # move to project 
 cd go-clean-architecture
 
-# run application
-go run main.go 
+# run application in local profile 
+go run main.go --profile=local
 
 ```
