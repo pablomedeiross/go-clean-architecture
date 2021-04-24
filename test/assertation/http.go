@@ -17,7 +17,7 @@ func AssertThatUserWasCreated(t *testing.T, response http.Response, err error) {
 	assert.Contains(t, response.Header.Get(location), localhost_uri+user_path+"/")
 }
 
-func AssertThatUserAlreadyExists(t *testing.T, response http.Response, err error, expectedError dto.Error) {
+func AssertHttpErrorEqual(t *testing.T, response http.Response, err error, expectedError dto.Error) {
 
 	assert.NoError(t, err)
 	bodyBytes, _ := ioutil.ReadAll(response.Body)
