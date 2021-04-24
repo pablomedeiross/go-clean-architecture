@@ -10,14 +10,14 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func AssertThatUserWasCreated(t *testing.T, response http.Response, err error) {
+func AssertHttpPostWasRealized(t *testing.T, response http.Response, err error) {
 
 	assert.NoError(t, err)
 	assert.Equal(t, 201, response.StatusCode)
 	assert.Contains(t, response.Header.Get(location), localhost_uri+user_path+"/")
 }
 
-func AssertThatUserAlreadyExists(t *testing.T, response http.Response, err error, expectedError dto.Error) {
+func AssertHttpErrorEqual(t *testing.T, response http.Response, err error, expectedError dto.Error) {
 
 	assert.NoError(t, err)
 	bodyBytes, _ := ioutil.ReadAll(response.Body)

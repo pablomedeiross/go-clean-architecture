@@ -7,7 +7,7 @@ import (
 	"testing"
 	"user-api/db/inmemory"
 	"user-api/external/configuration"
-	"user-api/test/e2e/assertation"
+	"user-api/test/assertation"
 	"user-api/test/e2e/dto"
 
 	"github.com/stretchr/testify/assert"
@@ -51,7 +51,7 @@ func (suite *E2ESuite) TestCreateUser() {
 	newUser := dto.RequestNewUser{Name: "name1", Email: "email@gmail.com", Age: 12}
 	jsonRequest, _ := json.Marshal(newUser)
 	response, err := sendPostToCreateUser(jsonRequest)
-	assertation.AssertThatUserWasCreated(suite.T(), *response, err)
+	assertation.AssertHttpPostWasRealized(suite.T(), *response, err)
 }
 
 func (suite *E2ESuite) TestCreateUserThatAlreadyExists() {
@@ -69,10 +69,10 @@ func (suite *E2ESuite) TestCreateUserThatAlreadyExists() {
 	}
 
 	response, err := sendPostToCreateUser(jsonRequest)
-	assertation.AssertThatUserWasCreated(suite.T(), *response, err)
+	assertation.AssertHttpPostWasRealized(suite.T(), *response, err)
 
 	response, err = sendPostToCreateUser(jsonRequest)
-	assertation.AssertThatUserAlreadyExists(suite.T(), *response, err, expectedError)
+	assertation.AssertHttpErrorEqual(suite.T(), *response, err, expectedError)
 }
 
 func (suite *E2ESuite) TestDeleteUser() {
@@ -81,15 +81,38 @@ func (suite *E2ESuite) TestDeleteUser() {
 	jsonRequest, _ := json.Marshal(newUser)
 	response, err := sendPostToCreateUser(jsonRequest)
 
-	assertation.AssertThatUserWasCreated(suite.T(), *response, err)
+	assertation.AssertHttpPostWasRealized(suite.T(), *response, err)
 
-	request, _ := http.NewRequest(http.MethodDelete, localhost_uri+user_path+"/"+newUser.Name, nil)
+	request, _ := sendDeleteUser(newUser.Name)
 	client := &http.Client{}
 	response, err = client.Do(request)
 
 	assert.NoError(suite.T(), err)
 	assert.Equal(suite.T(), 204, response.StatusCode)
 	assertation.AssertThatUserDontExistsInDB(suite.T(), newUser.Name, &suite.mongoDB)
+}
+
+func (suite *E2ESuite) TestDeleteNoExistentUser() {
+
+	expectedError := dto.Error{
+		RequestPath:  user_path + "/:id",
+		RequestParms: "",
+		RequestBody:  "",
+		ErrorMsg: "Couldn't remove user, usecase returning error: " +
+			"Error to try remove a user in RemoveUserInteractor: " +
+			"Error to delete user in repository: " +
+			"no exists a user with this name in database to delection",
+	}
+
+	request, _ := sendDeleteUser("noexistentuser")
+	client := &http.Client{}
+	response, err := client.Do(request)
+
+	assertation.AssertHttpErrorEqual(suite.T(), *response, err, expectedError)
+}
+
+func sendDeleteUser(name string) (*http.Request, error) {
+	return http.NewRequest(http.MethodDelete, localhost_uri+user_path+"/"+name, nil)
 }
 
 func sendPostToCreateUser(jsonRequest []byte) (*http.Response, error) {

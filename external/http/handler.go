@@ -57,6 +57,7 @@ func (handler *Handler) Delete(ctx *gin.Context) {
 
 	if err != nil {
 		createInternalServerErrorResponse(err, nil, ctx)
+		return
 	}
 
 	ctx.Status(204)
